@@ -1,1 +1,5 @@
 # matchingsite
+
+## Packages
+- django
+- Pillow
