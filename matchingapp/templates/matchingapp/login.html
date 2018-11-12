@@ -1,0 +1,53 @@
+{% extends "matchingapp/base.html" %}
+
+{% load staticfiles %}
+
+{% block content %}
+    <div class="main">
+        <table id="loginForm">
+            <label for="username">Username: </label>
+            <input type="text" id="username" placeholder="Username"/><br />
+            <label for="password">Password: </label>
+            <input type="password" id="password" placeholder="Username"/><br />
+            <input type="button" name="Log In" value="Log In" id="loginBtn"/>
+        </table>
+    </div>
+
+{% endblock %}
+
+{% block script %}
+<script>
+if ("{{ username }}" !== "")
+{
+    window.location.replace('..');
+}
+var csrftoken = Cookies.get('csrftoken');
+$('#loginBtn').click(function () {
+    $.ajax({
+        url: '',
+        type: 'POST',
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        data: {
+            username: $('#username').val(),
+            password: $('#password').val(),
+            csrfmiddlewaretoken: csrftoken
+        },
+        success: function (data) {
+            console.log("Success");
+            window.location.replace('..')
+        },
+        failure: function (data) {
+            console.log(data);
+            document.getElementById('username').style.borderColor = 'red';
+            document.getElementById('password').style.borderColor = 'red';
+        },
+        error: function(jqXHR, textStatus, error){
+            console.log("Error");
+            document.getElementById('username').style.borderColor = 'red';
+            document.getElementById('password').style.borderColor = 'red';
+        }
+    });
+});
+</script>
+
+{% endblock %}

@@ -20,7 +20,7 @@ class Profile(models.Model):
     name = models.TextField(max_length=40)
     email = models.TextField(max_length=100)
     gender = models.TextField(max_length=20)
-    dob = models.DateField()
+    dob = models.DateField(default=False)
     hobbies = models.ManyToManyField(
         to=Hobby,
         blank=True,
@@ -34,14 +34,10 @@ class Profile(models.Model):
 
 
 class Member(User):
+    isAdmin = models.BooleanField(default=False)
     profile = models.OneToOneField(
         to=Profile,
         blank=True,
         null=True,
         on_delete=models.CASCADE
-    )
-    connections = models.ManyToManyField(
-        to='self',
-        blank=True,
-        symmetrical=True
     )
