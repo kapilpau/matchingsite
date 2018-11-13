@@ -10,6 +10,7 @@
             <label for="password">Password: </label>
             <input type="password" id="password" placeholder="Username"/><br />
             <input type="button" name="Log In" value="Log In" id="loginBtn"/>
+            <input type="button" name="Sign Up" value="Sign Up" id="signupBtn"/>
         </table>
     </div>
 
@@ -17,10 +18,12 @@
 
 {% block script %}
 <script>
-if ("{{ username }}" !== "")
-{
-    window.location.replace('..');
-}
+
+$(document).ready(function (e) {
+    {#$('#editItemFormDiv').hide();#}
+});
+
+
 var csrftoken = Cookies.get('csrftoken');
 $('#loginBtn').click(function () {
     $.ajax({
@@ -45,6 +48,35 @@ $('#loginBtn').click(function () {
             console.log("Error");
             document.getElementById('username').style.borderColor = 'red';
             document.getElementById('password').style.borderColor = 'red';
+        }
+    });
+});
+$('#signupBtn').click(function () {
+    $.ajax({
+        url: '../signup/',
+        type: 'POST',
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        data: {
+            username: $('#username').val(),
+            password: $('#password').val(),
+            csrfmiddlewaretoken: csrftoken
+        },
+        success: function (data) {
+            console.log("Success");
+            window.location.replace('..')
+        },
+        failure: function (data) {
+            console.log(data);
+            document.getElementById('username').style.borderColor = 'red';
+            document.getElementById('password').style.borderColor = 'red';
+        },
+        error: function(jqXHR, textStatus, error){
+            console.log("Error");
+            if (jqXHR.responseText === "Username already taken")
+            {
+                document.getElementById('username').style.borderColor = 'red';
+                alert("Username already taken");
+            }
         }
     });
 });

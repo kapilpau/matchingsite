@@ -3,6 +3,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+	{% block head %}
+	{% endblock %}
+{#    {% load static %}#}
     <meta charset="UTF-8">
     <title>{{ siteName }}</title>
 </head>
@@ -17,9 +20,13 @@
 {% block script %}
 {% endblock %}
 <script>
-    if ("{{ username }}" === "")
-    {
-        window.location.replace('login');
+    console.log(window.location.pathname);
+    console.log("{{ isAdmin }}");
+    if ("{{ username }}" === "" && window.location.pathname !== '/login' && window.location.pathname !== '/login/') {
+        window.location.pathname = '/login/';
+        console.log("Foo");
+    } else if ("{{ username }}" !== "" && (window.location.pathname === '/login' || window.location.pathname === '/login/')) {
+        window.location.pathname = '/';
     }
 </script>
 </html>
