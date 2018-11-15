@@ -3,30 +3,28 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 	{% block head %}
 	{% endblock %}
-{#    {% load static %}#}
+    {% csrf_token %}
+    {% load static %}
     <meta charset="UTF-8">
     <title>{{ siteName }}</title>
 </head>
 <body>
-<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 	<br>
 	{% block content %}
 	{% endblock %}
 </body>
 
 <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
-{% block script %}
-{% endblock %}
 <script>
-    console.log(window.location.pathname);
-    console.log("{{ isAdmin }}");
     if ("{{ username }}" === "" && window.location.pathname !== '/login' && window.location.pathname !== '/login/') {
         window.location.pathname = '/login/';
-        console.log("Foo");
     } else if ("{{ username }}" !== "" && (window.location.pathname === '/login' || window.location.pathname === '/login/')) {
         window.location.pathname = '/';
     }
 </script>
+{% block script %}
+{% endblock %}
 </html>

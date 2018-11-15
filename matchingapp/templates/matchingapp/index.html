@@ -4,6 +4,10 @@
 
 {% block script %}
     <script>
-        console.log("User: {{ username }}");
+        console.log("Profile: {{ profile }}");
+        if ("{{ profile }}" === "{}")
+        {
+            window.location.pathname = '/profile/'
+        }
     </script>
 {% endblock %}

@@ -22,7 +22,6 @@ $(document).ready(function (e) {
     });
 });
 
-var csrftoken = Cookies.get('csrftoken');
 
 function doDelete(id) {
     if(confirm("Are you sure you want to remove " + document.getElementById(id + "-name").textContent)){
