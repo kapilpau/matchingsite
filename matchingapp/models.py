@@ -29,6 +29,9 @@ class Profile(models.Model):
         symmetrical=False
     )
 
+    def __str__(self):
+        return self.name
+
 
 # Django's User model already has username and password
 # both of which are required fields, so Member inherits
