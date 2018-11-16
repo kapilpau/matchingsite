@@ -1,12 +1,22 @@
 from django.core.files import File
 from django.db import IntegrityError
 from django.shortcuts import render
-from django.http import HttpResponse, QueryDict, HttpResponseBadRequest, JsonResponse, HttpResponseServerError
+from django.http import HttpResponse, QueryDict, Http404, HttpResponseBadRequest, JsonResponse, HttpResponseServerError
 from .models import Member, Hobby, Profile
 from django.core import serializers
 from django.db.models.functions import Lower, datetime
 import random, os
 from django.utils.html import escape
+
+
+# decorator that tests whether user is logged in
+def loggedin(view):
+    def mod_view(request):
+        if 'username' in request.session:
+            return view(request)
+        else:
+            return render(request, 'matchingapp/login.html', getContext())
+    return mod_view
 
 
 def index(request):
@@ -127,6 +137,7 @@ def getContext(request):
     return context
 
 
+@loggedin
 def updateProfile(request):
     request_dets = QueryDict(request.body)
     print(request_dets)
@@ -157,6 +168,7 @@ def updateProfile(request):
     return HttpResponse()
 
 
+@loggedin
 def uploadNewProfileImage(request):
     if 'new_img' in request.FILES:
         if request.session['profile'] == {}:
@@ -184,3 +196,21 @@ def uploadNewProfileImage(request):
         print(request.FILES)
         return HttpResponseBadRequest('Image file required')
 
+
+@loggedin
+def getUsers(request):
+    if request.method == 'GET' and request.is_ajax():
+        # mems = Member.objects.exclude(username=request.session['username'])
+        pfls = Profile.objects.exclude(member__username=request.session['username'])
+        print(pfls)
+        resp = []
+        for pfl in pfls:
+            print(pfl.hobbies.all())
+            hobbies = []
+            for hobby in pfl.hobbies.all():
+                # print(hobby)
+                hobbies.append(hobby.name)
+                # hobbies.append(Hobby.objects.get(id=hobby).name)
+            resp.append({'name': pfl.name, 'hobbies': hobbies})
+        return JsonResponse(resp, safe=False)
+        # return JsonResponse({}, safe=False)

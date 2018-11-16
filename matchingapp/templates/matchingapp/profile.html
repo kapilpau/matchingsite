@@ -46,7 +46,6 @@
             profile = {};
             switchToEdit();
         } else {
-            console.log({{ profile|safe }});
             profile = {{ profile|safe }};
             profile_img = "{{ profile.profile_image.url }}";
             hobbies = JSON.parse(profile.hobbies);
