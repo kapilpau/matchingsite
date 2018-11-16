@@ -2,12 +2,67 @@
 
 {% load staticfiles %}
 
+
+{% block content %}
+    <div id="usersDiv">
+        <table id="usersTable">
+            <tr>
+                <th>Name</th>
+                <th>Hobbies</th>
+            </tr>
+        </table>
+    </div>
+{% endblock %}
+
+
 {% block script %}
     <script>
-        console.log("Profile: {{ profile }}");
+        var csrftoken = Cookies.get('csrftoken');
         if ("{{ profile }}" === "{}")
         {
             window.location.pathname = '/profile/'
         }
+        var profile = {{ profile|safe }};
+        var hobbies = JSON.parse(profile.hobbies);
+        $.ajax({
+            url: '/getUsers',
+            type: 'GET',
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            },
+            success: function (data) {
+                var hobbies = JSON.parse(profile.hobbies);
+                console.log(data);
+                data.sort(function(a, b){
+                    a = a.hobbies;
+                    b = b.hobbies;
+                    var aCom = 0;
+                    var bCom = 0;
+                    for (var i = 0; i < a.length; i++)
+                    {
+                        if (hobbies.indexOf(a[i])){
+                            aCom++;
+                        }
+                    }
+                    for (var i = 0; i < b.length; i++)
+                    {
+                        if (hobbies.indexOf(b[i])){
+                            bCom++;
+                        }
+                    }
+                    return bCom - aCom
+                });
+                console.log(data);
+                for (var i = 0; i<data.length; i++){
+                    document.getElementById('usersTable').innerHTML += "<tr><td>" + data[i].name + "</td><td>" + data[i].hobbies.toString() + "</td></tr>"
+                }
+            },
+            failure: function (data) {
+                console.log(data);
+            },
+            error: function (data) {
+                console.log(data);
+            }
+        });
     </script>
 {% endblock %}
