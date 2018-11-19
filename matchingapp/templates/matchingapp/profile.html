@@ -44,9 +44,10 @@
         if (JSON.stringify({{ profile|safe }}) === "{}")
         {
             profile = {};
+            $('#newProfileImg').hide();
             switchToEdit();
         } else {
-            console.log({{ profile|safe }});
+            $('#newProfileImg').show();
             profile = {{ profile|safe }};
             profile_img = "{{ profile.profile_image.url }}";
             hobbies = JSON.parse(profile.hobbies);
