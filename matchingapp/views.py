@@ -1,12 +1,21 @@
-from django.core.files import File
 from django.db import IntegrityError
-from django.shortcuts import render
-from django.http import HttpResponse, QueryDict, HttpResponseBadRequest, JsonResponse, HttpResponseServerError
+from django.shortcuts import render, redirect
+from django.http import HttpResponse, Http404, QueryDict, HttpResponseBadRequest, JsonResponse, HttpResponseServerError
 from .models import Member, Hobby, Profile
 from django.core import serializers
 from django.db.models.functions import Lower, datetime
 import random, os
-from django.utils.html import escape
+from datetime import date
+
+
+# decorator that tests whether user is logged in
+def loggedin(view):
+    def mod_view(request):
+        if 'username' in request.session:
+            return view(request)
+        else:
+            return render(request, 'matchingapp/login.html', getContext())
+    return mod_view
 
 
 def index(request):
@@ -127,6 +136,7 @@ def getContext(request):
     return context
 
 
+@loggedin
 def updateProfile(request):
     request_dets = QueryDict(request.body)
     print(request_dets)
@@ -140,6 +150,8 @@ def updateProfile(request):
         hobbies.append(Hobby.objects.get(name=hobby))
     if pfl is None:
         pfl = Profile.objects.create(profile_image='profile_images/silhouette.png', name=request_dets['name'], email=request_dets['email'], dob=datetime.datetime.strptime(request_dets['dob'], "%Y-%m-%d").date(), gender=request_dets['gender'])
+        mem.profile = pfl
+        mem.save()
     else:
         pfl.name = request_dets['name']
         pfl.email = request_dets['email']
@@ -157,6 +169,7 @@ def updateProfile(request):
     return HttpResponse()
 
 
+@loggedin
 def uploadNewProfileImage(request):
     if 'new_img' in request.FILES:
         if request.session['profile'] == {}:
@@ -184,3 +197,28 @@ def uploadNewProfileImage(request):
         print(request.FILES)
         return HttpResponseBadRequest('Image file required')
 
+
+@loggedin
+def getUsers(request):
+    if request.method == 'GET' and request.is_ajax():
+        # mems = Member.objects.exclude(username=request.session['username'])
+        pfls = Profile.objects.exclude(member__username=request.session['username'])
+        print(pfls)
+        resp = []
+        for pfl in pfls:
+            print(pfl.hobbies.all())
+            hobbies = []
+            for hobby in pfl.hobbies.all():
+                # print(hobby)
+                hobbies.append(hobby.name)
+                # hobbies.append(Hobby.objects.get(id=hobby).name)
+
+            today = date.today()
+            born = pfl.dob
+            resp.append({'id': pfl.id, 'name': pfl.name, 'hobbies': hobbies, 'gender': pfl.gender, 'age': today.year - born.year - ((today.month, today.day) < (born.month, born.day))})
+        return JsonResponse(resp, safe=False)
+
+
+def signout(request):
+    request.session.flush()
+    return redirect('/login/')

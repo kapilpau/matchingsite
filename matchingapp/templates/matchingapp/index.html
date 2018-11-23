@@ -2,12 +2,119 @@
 
 {% load staticfiles %}
 
+
+{% block content %}
+    <div id="usersDiv">
+        <table id="usersTable">
+            <tr>
+                <th>Name</th>
+                <th>Hobbies</th>
+            </tr>
+        </table>
+    </div>
+    <div>
+        <table>
+            <tr>
+                <input type="checkbox" id="Male_chckbox" checked><label for="Male_chckbox">Male</label>
+                <input type="checkbox" id="Female_chckbox" checked><label for="Female_chckbox">Female</label>
+                <input type="checkbox" id="Other_chckbox" checked><label for="Other_chckbox">Other</label>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                      <label for="age_range">Age range:</label>
+                      <input type="text" id="age_range" readonly style="border:0; color:#f6931f; font-weight:bold;">
+                    </p>
+
+                    <div id="slider-range"></div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <button onclick="updateList()">Filter</button>
+                </td>
+            </tr>
+        </table>
+    </div>
+{% endblock %}
+
+
 {% block script %}
     <script>
-        console.log("Profile: {{ profile }}");
+        var profiles;
+        var csrftoken = Cookies.get('csrftoken');
+        var slider =  $("#slider-range");
+        var age_range = $("#age_range");
         if ("{{ profile }}" === "{}")
         {
             window.location.pathname = '/profile/'
         }
+        var profile = {{ profile|safe }};
+        var hobbies = JSON.parse(profile.hobbies);
+        $.ajax({
+            url: '/getUsers',
+            type: 'GET',
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            },
+            success: function (data) {
+                profiles = data;
+                var hobbies = JSON.parse(profile.hobbies);
+                console.log(data);
+                data.sort(function(a, b){
+                    a = a.hobbies;
+                    b = b.hobbies;
+                    var aCom = 0;
+                    var bCom = 0;
+                    for (var i = 0; i < a.length; i++)
+                    {
+                        if (hobbies.indexOf(a[i])){
+                            aCom++;
+                        }
+                    }
+                    for (var i = 0; i < b.length; i++)
+                    {
+                        if (hobbies.indexOf(b[i])){
+                            bCom++;
+                        }
+                    }
+                    return bCom - aCom
+                });
+                console.log(data);
+                for (var i = 0; i<data.length; i++){
+                    document.getElementById('usersTable').innerHTML += "<tr id='pfl"+data[i].id+"'><td>" + data[i].name + "</td><td>" + data[i].hobbies.toString() + "</td></tr>"
+                }
+            },
+            failure: function (data) {
+                console.log(data);
+            },
+            error: function (data) {
+                console.log(data);
+            }
+        });
+          $( function() {
+            slider.slider({
+              range: true,
+              min: 18,
+              max: 99,
+              values: [18, 99],
+              slide: function( event, ui ) {
+                age_range.val( ui.values[ 0 ] + " - " + ui.values[ 1 ] );
+              }
+            });
+            age_range.val( slider.slider( "values", 0 ) +
+              " - " + slider.slider( "values", 1 ) );
+          } );
+
+          function updateList() {
+              console.log("Filtering");
+              profiles.forEach(function (pfl) {
+                  if ((pfl.age >= slider.slider("values", 0)) && (pfl.age <= slider.slider("values", 1)) && (document.getElementById(pfl.gender + '_chckbox').checked)) {
+                    $('#pfl' + pfl.id).show();
+                  } else {
+                    $('#pfl' + pfl.id).hide();
+                  }
+              });
+          }
     </script>
 {% endblock %}

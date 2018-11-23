@@ -4,6 +4,8 @@
 <html lang="en">
 <head>
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 	{% block head %}
 	{% endblock %}
     {% csrf_token %}
@@ -12,6 +14,7 @@
     <title>{{ siteName }}</title>
 </head>
 <body>
+      <a id="homeBtn" href="/">Home</a>&nbsp&nbsp&nbsp&nbsp<a id="profileBtn" href="/profile">Profile</a>&nbsp&nbsp&nbsp&nbsp<a id="signOutBtn" href="/signout">Sign Out</a>
 	<br>
 	{% block content %}
 	{% endblock %}
@@ -27,4 +30,5 @@
 </script>
 {% block script %}
 {% endblock %}
+
 </html>
