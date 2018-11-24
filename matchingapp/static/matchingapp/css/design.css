@@ -1,3 +1,19 @@
 body {
-    background-color: #BBDEFB;
+    background-color: #fafafa;
 }
+
+.main {
+    margin: 0 auto;
+    width: 30%;
+}
+
+label, input, table {
+    
+}
+
+h1 {
+    text-align: center;
+    text-shadow: 1px 1px grey;
+    font-family: "Stencil Std", cursive;
+}
+
