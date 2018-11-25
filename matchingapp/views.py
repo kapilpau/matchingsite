@@ -67,9 +67,11 @@ def signup(request):
 
 
 def profile(request, prof=None):
-    print(prof)
-    print(Profile.objects.get(member__username=request.session['username']))
-    if prof == Profile.objects.get(member__username=request.session['username']).id:
+    pfl = Profile.objects.get(id=prof)
+    print(pfl)
+    mem = Member.objects.get(profile=pfl)
+    user = Member.objects.get(username=request.session['username'])
+    if prof == user.profile.id:
         return redirect('/profile/')
     context = getContext(request)
     hobby_set = Hobby.objects.values_list('name', flat=True)
@@ -79,6 +81,14 @@ def profile(request, prof=None):
                                   'email': pfl.email, 'gender': pfl.gender, 'dob': str(pfl.dob),
                                   'hobbies': list(pfl.hobbies.values_list('name', flat=True))}
     print(context)
+    match_status = 0
+    if mem in user.match_requests.all():
+        match_status = 1
+    elif mem in user.matches.all():
+        match_status = 2
+    elif user in mem.match_requests.all():
+        match_status = 3
+    context['match_status'] = match_status
     return render(request, 'matchingapp/profile.html', context)
 
 
@@ -310,3 +320,17 @@ def messages(request):
 def conversation(request):
     return HttpResponse()
 
+
+def cancelRequest(request):
+    if request.method == 'POST':
+        prof = Profile.objects.get(id=request.POST['id'])
+        mem = Member.objects.get(profile=prof)
+        user = Member.objects.get(username=request.session['username'])
+        if user in mem.match_requests.all():
+            mem.match_requests.remove(user)
+            mem.save()
+            return HttpResponse()
+        else:
+            return HttpResponseBadRequest(user.profile.name + " hasn't requested to match with " + prof.name)
+    else:
+        return HttpResponseBadRequest('Request must be post')

@@ -22,6 +22,7 @@ urlpatterns = [
     path('matches/', views.matches, name='matches'),
     path('manageRequest/', views.manageRequest, name='matches'),
     path('deleteMatch/', views.deleteMatch, name='matches'),
+    path('cancelRequest/', views.cancelRequest, name='matches'),
     path('messages/', views.messages, name='matches'),
     path('messages/<int:usr>', views.conversation, name='matches'),
 ]

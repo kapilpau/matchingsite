@@ -4,10 +4,23 @@
 
 {% block head %}
 <script src="{% static 'matchingapp/js/profile.js' %}"></script>
+<script src="{% static 'matchingapp/js/matches.js' %}"></script>
 {% endblock %}
 
 {% block content %}
-    <button id="requestMatch" onclick="requestMatch({{ profile.id }})">Request Match</button>
+    <div id="controlsDiv">
+    {% if match_status == 0 %}
+        <button onclick="requestMatch({{ profile.id }})">Request Match</button>
+    {% elif match_status == 1 %}
+        <button onclick="manageRequest({{ profile.id }}, 'accept')">Accept Match Request</button>
+        <button onclick="manageRequest({{ profile.id }}, 'reject')">Reject Match Request</button>
+    {% elif match_status == 2 %}
+        <button href="/messages/{{ profile.id }}/">Send message</button>
+        <button onclick="deleteMatch({{ profile.id }})">Delete Match</button>
+    {% elif match_status == 3 %}
+        <button onclick="cancelRequest({{ profile.id }})">Cancel Request</button>
+    {% endif %}
+    </div>
     <div id="profileDiv">
         <img id="profileImg" src="../..{{ profile.profile_image }}" height="200px">
         <br />
