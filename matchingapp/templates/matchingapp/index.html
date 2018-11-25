@@ -82,7 +82,7 @@
                 });
                 console.log(data);
                 for (var i = 0; i<data.length; i++){
-                    document.getElementById('usersTable').innerHTML += "<tr id='pfl"+data[i].id+"'><td>" + data[i].name + "</td><td>" + data[i].hobbies.toString() + "</td></tr>"
+                    document.getElementById('usersTable').innerHTML += "<tr id='pfl"+data[i].id+"'><td><a href=\"/profile/"+data[i].id+"\">" + data[i].name + "</a></td><td>" + data[i].hobbies.toString() + "</td></tr>"
 
                 }
             },

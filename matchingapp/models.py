@@ -46,3 +46,13 @@ class Member(User):
         null=True,
         on_delete=models.CASCADE
     )
+    matches = models.ManyToManyField(
+        to='self',
+        symmetrical=True,
+        blank=True
+    )
+    match_requests = models.ManyToManyField(
+        to='self',
+        symmetrical=False,
+        blank=True
+    )
