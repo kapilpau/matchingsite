@@ -29,6 +29,30 @@ body {
     width: 200px;
 }
 
+.loginLabel {
+    font-family: Arial;
+    font-weight: bold;
+    text-transform: uppercase;
+    padding: 2px;
+    display: inline-block;
+    width: 100px;
+}
+
+#usersDiv {
+    margin: 0 auto;
+}
+
+#usersTable {
+    width: 30%;
+    font-family: Arial;
+}
+
+#usersTopRow {
+    background-color: #aae6e7;
+    font-weight: bold;
+    font-size: 16px;
+}
+
 #homeBtn, #profileBtn, #signOutBtn {
     font-size: 16px;
     font-weight: bold;
