@@ -15,9 +15,9 @@ function manageRequest(id, action) {
             console.log(data);
             if (action === 'accept') {
                 if (document.getElementById('matchesTable')) {
-                    document.getElementById('matchesTable').innerHTML += '<tr id="match' + data.id + '"><td>' + data.name + '</td><td><i href="/messages/' + data.id + '/" class="material-icons">mail</i><i onclick="deleteMatch(' + data.id + ')" class="material-icons">clear</i></td></tr>';
+                    document.getElementById('matchesTable').innerHTML += '<tr id="match' + data.id + '"><td>' + data.name + '</td><td><a href="/findConvo/' + data.id + '/"><i class="material-icons">mail</i></a><i onclick="deleteMatch(' + data.id + ')" class="material-icons">clear</i></td></tr>';
                 } else {
-                    document.getElementById('controlsDiv').innerHTML = '<button href="/messages/'+data.id+'/">Send message</button><button onclick="deleteMatch('+data.id+')">Delete Match</button>'
+                    document.getElementById('controlsDiv').innerHTML = '<button href="/findConvo/'+data.id+'/">Send message</button><button onclick="deleteMatch('+data.id+')">Delete Match</button>'
                 }
             } else {
                 if (document.getElementById('controlsDiv')) {

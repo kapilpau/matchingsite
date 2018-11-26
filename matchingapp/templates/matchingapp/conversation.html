@@ -1,0 +1,24 @@
+{% extends "matchingapp/base.html" %}
+
+{% load staticfiles %}
+
+{% block head %}
+<script src="{% static 'matchingapp/js/conversation.js' %}"></script>
+{% endblock %}
+
+{%  block content %}
+<div id="chatHistory" style="height: 300px; width: 700px; border: 1px solid">
+{%  if msgs|length == 0  %}
+    No messages sent yet, send one now
+{% else %}
+{% for msg in msgs %}
+    {{ msg.sender }} @ {{ msg.sent_at }}: {{ msg.contents }} <br />
+{% endfor %}
+{% endif %}
+</div>
+
+<textarea id="compose" placeholder="Compose message" style="width: 696px; border: 1px solid"></textarea>
+<div id="sendBtnDiv">
+    <button id="send" onclick="sendMsg()">Send</button>
+</div>
+{% endblock %}

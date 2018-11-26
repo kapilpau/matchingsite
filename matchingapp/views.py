@@ -1,7 +1,7 @@
 from django.db import IntegrityError
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, QueryDict, HttpResponseBadRequest, JsonResponse, HttpResponseServerError
-from .models import Member, Hobby, Profile
+from .models import Member, Hobby, Profile, Conversation, Message
 from django.core import serializers
 from django.db.models.functions import Lower, datetime
 import random, os
@@ -145,8 +145,8 @@ def getContext(request):
         profile = request.session['profile']
     except KeyError:
         profile = {}
-    mem = Member.objects.get(username=request.session['username'])
     try:
+        mem = Member.objects.get(username=request.session['username'])
         matches = []
         for match in mem.matches.all():
             matches.append({'id': match.profile.id, 'name': match.profile.name})
@@ -155,6 +155,7 @@ def getContext(request):
         matches = []
         request.session['matches'] = []
     try:
+        mem = Member.objects.get(username=request.session['username'])
         match_requests = []
         for match in mem.match_requests.all():
             match_requests.append({'id': match.profile.id, 'name': match.profile.name})
@@ -314,11 +315,46 @@ def deleteMatch(request):
 
 
 def messages(request):
-    return HttpResponse()
+    convos = Conversation.objects.all()
+    user = Member.objects.get(username=request.session['username'])
+    contextConvos = []
+    for convo in convos:
+        if user in convo.participants.all():
+            contextConvos.append({'id': convo.id, 'name': convo.name})
+    context = getContext(request)
+    context['conversations'] = contextConvos
+    return render(request, 'matchingapp/messages.html', context)
 
 
-def conversation(request):
-    return HttpResponse()
+def convoRedirect(request, id):
+    prof = Member.objects.get(profile=Profile.objects.get(id=id))
+    user = Member.objects.get(username=request.session['username'])
+    convos = Conversation.objects.all()
+    for convo in convos:
+        if (convo.participants.count() == 2) and (prof in convo.participants.all()) and (user in convo.participants.all()):
+            return redirect('/messages/' + str(convo.id))
+    if prof.profile.name > user.profile.name:
+        name = user.profile.name + ", " + prof.profile.name
+    else:
+        name = prof.profile.name + ", " + user.profile.name
+    convo = Conversation.objects.create(name=name)
+    convo.participants.add(prof)
+    convo.participants.add(user)
+    convo.save()
+    return redirect('/messages/' + str(convo.id))
+
+
+def conversation(request, id):
+    context = getContext(request)
+    try:
+        msgs = Message.objects.order_by('sent_at').filter(conversation=Conversation.objects.get(id=id))
+        contextMsgs = []
+        for msg in msgs:
+            contextMsgs.append({'sender': msg.sender.profile.name, 'sent_at': msg.sent_at.strftime("%Y-%m-%d %H:%M:%S"), 'contents': msg.contents})
+            context['msgs'] = contextMsgs
+    except Message.DoesNotExist:
+        context['msgs'] = {}
+    return render(request, 'matchingapp/conversation.html', context)
 
 
 def cancelRequest(request):

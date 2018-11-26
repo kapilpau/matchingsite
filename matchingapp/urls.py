@@ -24,5 +24,6 @@ urlpatterns = [
     path('deleteMatch/', views.deleteMatch, name='matches'),
     path('cancelRequest/', views.cancelRequest, name='matches'),
     path('messages/', views.messages, name='matches'),
-    path('messages/<int:usr>', views.conversation, name='matches'),
+    path('messages/<int:id>/', views.conversation, name='matches'),
+    path('findConvo/<int:id>/', views.convoRedirect, name='convoRedirect')
 ]

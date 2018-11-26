@@ -128,6 +128,9 @@ STATICFILES_DIR = [
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
+
+ASGI_APPLICATION = 'matchingsite.routing.application'
+
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
@@ -137,4 +140,3 @@ CHANNEL_LAYERS = {
     }
 }
 
-ASGI_APPLICATION = 'matchingsite.routing.application'
