@@ -7,6 +7,7 @@ function sendMsg() {
         message: $('#compose').val()
     };
     chat_socket.send(JSON.stringify(message));
+
 }
 
 chat_socket.onopen = function (evt) {
@@ -28,6 +29,8 @@ chat_socket.onmessage = function(resp) {
         } else {
             document.getElementById('chatHistory').innerHTML += newMsg + "<br />";
         }
+    } else if (resp.data === 'MessageReceived'){
+        $('#compose').value = "";
     }
 
 };
