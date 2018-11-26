@@ -3,11 +3,16 @@
 {% load staticfiles %}
 
 {% block content %}
-    <div class="main">
+
+    <div class="main" align="center">
+        <h1>Matching Site</h1>
         <table id="loginForm">
-            <label for="username">Username: </label>
+            <label class="loginLabel" for="username">Username: </label>
+            <br/>
             <input type="text" id="username" placeholder="Username"/><br />
-            <label for="password">Password: </label>
+            <br/>
+            <label class="loginLabel" for="password">Password: </label>
+            <br/>
             <input type="password" id="password" placeholder="Password"/><br />
             <input type="button" name="Log In" value="Log In" id="loginBtn"/>
             <input type="button" name="Sign Up" value="Sign Up" id="signupBtn"/>

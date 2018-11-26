@@ -1,12 +1,15 @@
 {% load staticfiles %}
+{% load static %}
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'matchingapp/css/design.css' %}">
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
 	{% block head %}
 	{% endblock %}
     {% csrf_token %}
@@ -20,8 +23,11 @@
     </style>
 </head>
 <body>
+    <div align="center" id="menuBtns">
       <a id="homeBtn" href="/">Home</a>&nbsp&nbsp&nbsp&nbsp<a id="profileBtn" href="/profile">Profile</a>&nbsp&nbsp&nbsp&nbsp<a id="matchesBtn" href="/matches">Matches</a>&nbsp&nbsp&nbsp&nbsp<a id="messagesBtn" href="/messages">Messages</a>&nbsp&nbsp&nbsp&nbsp<a id="signOutBtn" href="/signout">Sign Out</a>
+
 	<br>
+    </div>
 	{% block content %}
 	{% endblock %}
 </body>

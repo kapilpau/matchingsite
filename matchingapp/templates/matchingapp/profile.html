@@ -23,20 +23,24 @@
     </div>
     <div id="profileDiv">
         <img id="profileImg" src="../..{{ profile.profile_image }}" height="200px">
+
         <br />
-        <label for="name">Name:</label>
+        <input align="right" type="file" name="newProfileImg" id="newProfileImg" onchange="uploadNewProfileImage()"/>
+        <img id="profileImg" src="{{ profile.profile_image }}" height="200px">
+        <br /><br />
+        <label class="profileLabel" for="name">Name:</label><br />
         <span id="name">{{ profile.name }}</span>
-        <br />
-        <label for="dob">Date of Birth:</label>
+        <br /><br />
+        <label class="profileLabel" for="dob">Date of Birth:</label><br />
         <span id="dob">{{ profile.dob }}</span>
-        <br />
-        <label for="email">Email:</label>
+        <br /><br />
+        <label class="profileLabel" for="email">Email:</label><br />
         <span id="email">{{ profile.email }}</span>
-        <br />
-        <label for="gender">Gender:</label>
+        <br /><br />
+        <label class="profileLabel" for="gender">Gender:</label><br />
         <span id="gender">{{ profile.gender }}</span>
-        <br />
-        <label for="hobbies">Hobbies:</label>
+        <br /><br />
+        <label class="profileLabel" for="hobbies">Hobbies:</label>
         <br />
         {% for hobby in profile.hobbies %}
             <p id="{{ hobby }}-label">{{ hobby }}</p>

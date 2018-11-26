@@ -1,0 +1,82 @@
+body {
+    background-color: #fafafa;
+}
+
+.main {
+    margin: 0 auto;
+    width: 30%;
+}
+
+#profileBtns{
+    width: 20%;
+    margin: 0 auto;
+}
+
+#profileDiv {
+    text-align: center;
+    width: 20%;
+    margin: 0 auto;
+    clear: both;
+    font-family: Arial;
+}
+
+.profileLabel {
+    background-color: #aae6e7;
+    font-weight: bold;
+    text-transform: uppercase;
+    padding: 2px;
+    display: inline-block;
+    width: 200px;
+}
+
+.loginLabel {
+    font-family: Arial;
+    font-weight: bold;
+    text-transform: uppercase;
+    padding: 2px;
+    display: inline-block;
+    width: 100px;
+}
+
+#usersDiv {
+    margin: 0 auto;
+}
+
+#usersTable {
+    width: 30%;
+    font-family: Arial;
+}
+
+#usersTopRow {
+    background-color: #aae6e7;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+#homeBtn, #profileBtn, #signOutBtn {
+    font-size: 16px;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-decoration: none;
+    font-family: Verdana;
+}
+
+h1 {
+    text-align: center;
+    text-shadow: 1px 1px grey;
+    font-family: "Stencil Std", cursive;
+}
+
+#loginBtn, #signupBtn, #editBtn, #saveBtn {
+    background-color: #2196f3;
+    border: none;
+    color: white;
+    padding: 7px 15px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    margin-top: 20px;
+    cursor: pointer;
+}
