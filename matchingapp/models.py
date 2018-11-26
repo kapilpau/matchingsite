@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from datetime import datetime
 
 # Hobby model has a name field and an optional description
 # field and has a Many-To-Many field with Profile
@@ -46,3 +47,36 @@ class Member(User):
         null=True,
         on_delete=models.CASCADE
     )
+    matches = models.ManyToManyField(
+        to='self',
+        symmetrical=True,
+        blank=True
+    )
+    match_requests = models.ManyToManyField(
+        to='self',
+        symmetrical=False,
+        blank=True
+    )
+
+
+class Conversation(models.Model):
+    name = models.CharField(max_length=100, null=False, blank=False)
+    participants = models.ManyToManyField(
+        to=Member,
+        blank=True,
+        symmetrical=False
+    )
+
+
+class Message(models.Model):
+    conversation = models.ForeignKey(Conversation, on_delete=models.CASCADE)
+    sender = models.ForeignKey(Member, on_delete=models.SET_NULL, null=True)
+    read_by = models.ManyToManyField(
+        to=Member,
+        related_name='ready_by',
+        blank=True,
+        null=True,
+        symmetrical=False
+    )
+    sent_at = models.DateTimeField(default=datetime.now, blank=False, null=False)
+    contents = models.TextField()

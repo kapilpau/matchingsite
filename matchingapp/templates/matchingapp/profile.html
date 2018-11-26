@@ -4,10 +4,26 @@
 
 {% block head %}
 <script src="{% static 'matchingapp/js/profile.js' %}"></script>
+<script src="{% static 'matchingapp/js/matches.js' %}"></script>
 {% endblock %}
 
 {% block content %}
-    <div align="center" id="profileDiv">
+    <div id="controlsDiv">
+    {% if match_status == 0 %}
+        <button onclick="requestMatch({{ profile.id }})">Request Match</button>
+    {% elif match_status == 1 %}
+        <button onclick="manageRequest({{ profile.id }}, 'accept')">Accept Match Request</button>
+        <button onclick="manageRequest({{ profile.id }}, 'reject')">Reject Match Request</button>
+    {% elif match_status == 2 %}
+        <a href="/findConvo/{{ profile.id }}/"><button>Send message</button></a>
+        <button onclick="deleteMatch({{ profile.id }})">Delete Match</button>
+    {% elif match_status == 3 %}
+        <button onclick="cancelRequest({{ profile.id }})">Cancel Request</button>
+    {% endif %}
+    </div>
+    <div id="profileDiv">
+        <img id="profileImg" src="../..{{ profile.profile_image }}" height="200px">
+
         <br />
         <input align="right" type="file" name="newProfileImg" id="newProfileImg" onchange="uploadNewProfileImage()"/>
         <img id="profileImg" src="{{ profile.profile_image }}" height="200px">
@@ -26,38 +42,8 @@
         <br /><br />
         <label class="profileLabel" for="hobbies">Hobbies:</label>
         <br />
-        {% for hobby in hobby_list %}
-        <label for="{{ hobby }}" id="{{ hobby }}-label">{{ hobby }}</label>
-        <input type="checkbox" name="hobby" value="{{ hobby }}" id="{{ hobby }}">
-        <br id="{{ hobby }}-br"/>
+        {% for hobby in profile.hobbies %}
+            <p id="{{ hobby }}-label">{{ hobby }}</p>
         {% endfor %}
     </div>
-    <div align="center" id="profileBtns">
-        <button id="editBtn" onclick="switchToEdit()">Edit</button>
-        <button id="saveBtn" onclick="save()">Save</button>
-    </div>
-{% endblock %}
-
-{% block script %}
-    <script>
-        $('[name="hobby"]').hide();
-        $("[id*='label']").hide();
-        $("[id*='br']").hide();
-        $('#saveBtn').hide();
-        if (JSON.stringify({{ profile|safe }}) === "{}")
-        {
-            profile = {};
-            switchToEdit();
-        } else {
-            profile = {{ profile|safe }};
-            profile_img = "{{ profile.profile_image.url }}";
-            hobbies = JSON.parse(profile.hobbies);
-            hobbies.forEach(function (hobby) {
-                $('#' + hobby.fields.name + "-label").show();
-                $('#' + hobby.fields.name + "-br").show();
-                $('#' + hobby.fields.name).prop('checked', true);
-            });
-        }
-    </script>
-
 {% endblock %}

@@ -1,7 +1,7 @@
 from django.db import IntegrityError
 from django.shortcuts import render, redirect
-from django.http import HttpResponse, Http404, QueryDict, HttpResponseBadRequest, JsonResponse, HttpResponseServerError
-from .models import Member, Hobby, Profile
+from django.http import HttpResponse, QueryDict, HttpResponseBadRequest, JsonResponse, HttpResponseServerError
+from .models import Member, Hobby, Profile, Conversation, Message
 from django.core import serializers
 from django.db.models.functions import Lower, datetime
 import random, os
@@ -43,11 +43,8 @@ def login(request):
                 try:
                     pfl = mem.profile
                     request.session['profile'] = {'id': pfl.pk, 'profile_image': pfl.profile_image.url, 'name': pfl.name, 'email': pfl.email, 'gender': pfl.gender, 'dob': str(pfl.dob), 'hobbies': serializers.serialize('json', pfl.hobbies.all())}
-                    print("Fuuuuuuuck")
                 except:
                     request.session['profile'] = {}
-                for key, value in request.session.items():
-                    print('{} => {}'.format(key, value))
                 return HttpResponse()
             except Member.DoesNotExist:
                 return HttpResponseBadRequest('Member does not exist')
@@ -69,20 +66,37 @@ def signup(request):
                 return HttpResponseBadRequest('Username already taken')
 
 
-def profile(request):
-    print(type(request.session))
-    print(request.session['profile'])
+def profile(request, prof=None):
+    pfl = Profile.objects.get(id=prof)
+    print(pfl)
+    mem = Member.objects.get(profile=pfl)
+    user = Member.objects.get(username=request.session['username'])
+    if prof == user.profile.id:
+        return redirect('/profile/')
     context = getContext(request)
     hobby_set = Hobby.objects.values_list('name', flat=True)
     context['hobby_list'] = list(hobby_set)
-    print('Session profile:')
-    print(context['profile'])
-    print('Context:')
+    pfl = Profile.objects.get(id=prof)
+    context['profile'] = {'id': pfl.pk, 'profile_image': pfl.profile_image.url, 'name': pfl.name,
+                                  'email': pfl.email, 'gender': pfl.gender, 'dob': str(pfl.dob),
+                                  'hobbies': list(pfl.hobbies.values_list('name', flat=True))}
     print(context)
-    print("Session:")
-    for key, value in request.session.items():
-        print('{} => {}'.format(key, value))
+    match_status = 0
+    if mem in user.match_requests.all():
+        match_status = 1
+    elif mem in user.matches.all():
+        match_status = 2
+    elif user in mem.match_requests.all():
+        match_status = 3
+    context['match_status'] = match_status
     return render(request, 'matchingapp/profile.html', context)
+
+
+def userProfile(request):
+    context = getContext(request)
+    hobby_set = Hobby.objects.values_list('name', flat=True)
+    context['hobby_list'] = list(hobby_set)
+    return render(request, 'matchingapp/user_profile.html', context)
 
 
 def getHobbies(request):
@@ -131,21 +145,36 @@ def getContext(request):
         profile = request.session['profile']
     except KeyError:
         profile = {}
+    try:
+        mem = Member.objects.get(username=request.session['username'])
+        matches = []
+        for match in mem.matches.all():
+            matches.append({'id': match.profile.id, 'name': match.profile.name})
+        request.session['matches'] = matches
+    except:
+        matches = []
+        request.session['matches'] = []
+    try:
+        mem = Member.objects.get(username=request.session['username'])
+        match_requests = []
+        for match in mem.match_requests.all():
+            match_requests.append({'id': match.profile.id, 'name': match.profile.name})
+        request.session['match_requests'] = match_requests
+    except:
+        match_requests = []
+        request.session['match_requests'] = []
     #     Graftr/Bindr
-    context = {'siteName': 'Graftr', 'username': user, 'isAdmin': isAdmin, 'profile': profile}
+    context = {'siteName': 'Graftr', 'username': user, 'isAdmin': isAdmin, 'profile': profile, 'matches': matches, 'match_requests': match_requests}
     return context
 
 
 @loggedin
 def updateProfile(request):
     request_dets = QueryDict(request.body)
-    print(request_dets)
     mem = Member.objects.get(username=request.session['username'])
     pfl = mem.profile
     hobbies = []
     checkedHobbies = request_dets.getlist('checkedHobbies[]')
-    print('Checked hobbies')
-    print(checkedHobbies)
     for hobby in checkedHobbies:
         hobbies.append(Hobby.objects.get(name=hobby))
     if pfl is None:
@@ -160,9 +189,6 @@ def updateProfile(request):
     pfl.hobbies.set(hobbies)
     pfl.hobbies.set(hobbies)
     pfl.save()
-    print("Profile: ")
-    # for key, value in pfl:
-    #     print('{} => {}'.format(key, value))
     request.session['profile'] = {'id': pfl.pk, 'profile_image': pfl.profile_image.url, 'name': pfl.name,
                                   'email': pfl.email, 'gender': pfl.gender, 'dob': str(pfl.dob),
                                   'hobbies': serializers.serialize('json', pfl.hobbies.all())}
@@ -201,7 +227,6 @@ def uploadNewProfileImage(request):
 @loggedin
 def getUsers(request):
     if request.method == 'GET' and request.is_ajax():
-        # mems = Member.objects.exclude(username=request.session['username'])
         pfls = Profile.objects.exclude(member__username=request.session['username'])
         print(pfls)
         resp = []
@@ -209,16 +234,139 @@ def getUsers(request):
             print(pfl.hobbies.all())
             hobbies = []
             for hobby in pfl.hobbies.all():
-                # print(hobby)
                 hobbies.append(hobby.name)
-                # hobbies.append(Hobby.objects.get(id=hobby).name)
-
             today = date.today()
             born = pfl.dob
-            resp.append({'name': pfl.name, 'hobbies': hobbies, 'gender': pfl.gender, 'age': today.year - born.year - ((today.month, today.day) < (born.month, born.day))})
+            resp.append({'id': pfl.id, 'name': pfl.name, 'hobbies': hobbies, 'gender': pfl.gender, 'age': today.year - born.year - ((today.month, today.day) < (born.month, born.day))})
         return JsonResponse(resp, safe=False)
 
 
 def signout(request):
     request.session.flush()
     return redirect('/login/')
+
+
+def requestMatch(request):
+    prof = Profile.objects.get(id=request.POST['id'])
+    mem = Member.objects.get(profile=prof)
+    user = Member.objects.get(username=request.session['username'])
+    if mem in user.match_requests.all():
+        try:
+            user.matches.add(mem)
+            user.save()
+            user.match_requests.remove(mem)
+            user.save()
+        except:
+            return HttpResponseServerError("Something went wrong")
+
+    else:
+        mem.match_requests.add(user)
+        mem.save()
+    return HttpResponse()
+
+
+def matches(request):
+    context = getContext(request)
+    print(context)
+    return render(request, 'matchingapp/matches.html', context)
+
+
+def manageRequest(request):
+    if request.method == 'POST':
+        prof = Profile.objects.get(id=request.POST['id'])
+        mem = Member.objects.get(profile=prof)
+        user = Member.objects.get(username=request.session['username'])
+        if request.POST['action'] == 'accept':
+            if mem in user.match_requests.all():
+                try:
+                    user.matches.add(mem)
+                    user.save()
+                    user.match_requests.remove(mem)
+                    user.save()
+                    return JsonResponse({'id': prof.id, 'name': prof.name}, safe=False)
+                except:
+                    return HttpResponseServerError()
+            else:
+                return HttpResponseBadRequest(mem.profile.name + " hasn't requested to match")
+        else:
+            user.match_requests.remove(mem)
+            return HttpResponse()
+    else:
+        return HttpResponseBadRequest()
+
+
+def deleteMatch(request):
+    if request.method == 'POST':
+        prof = Profile.objects.get(id=request.POST['id'])
+        mem = Member.objects.get(profile=prof)
+        user = Member.objects.get(username=request.session['username'])
+        if mem in user.matches.all():
+            try:
+                user.matches.remove(mem)
+                user.save()
+                return HttpResponse()
+            except:
+                return HttpResponseServerError()
+        else:
+            return HttpResponseBadRequest(mem.profile.name + " isn't matched")
+
+    else:
+        return HttpResponseBadRequest()
+
+
+def messages(request):
+    convos = Conversation.objects.all()
+    user = Member.objects.get(username=request.session['username'])
+    contextConvos = []
+    for convo in convos:
+        if user in convo.participants.all():
+            contextConvos.append({'id': convo.id, 'name': convo.name})
+    context = getContext(request)
+    context['conversations'] = contextConvos
+    return render(request, 'matchingapp/messages.html', context)
+
+
+def convoRedirect(request, id):
+    prof = Member.objects.get(profile=Profile.objects.get(id=id))
+    user = Member.objects.get(username=request.session['username'])
+    convos = Conversation.objects.all()
+    for convo in convos:
+        if (convo.participants.count() == 2) and (prof in convo.participants.all()) and (user in convo.participants.all()):
+            return redirect('/messages/' + str(convo.id))
+    if prof.profile.name > user.profile.name:
+        name = user.profile.name + ", " + prof.profile.name
+    else:
+        name = prof.profile.name + ", " + user.profile.name
+    convo = Conversation.objects.create(name=name)
+    convo.participants.add(prof)
+    convo.participants.add(user)
+    convo.save()
+    return redirect('/messages/' + str(convo.id))
+
+
+def conversation(request, id):
+    context = getContext(request)
+    try:
+        msgs = Message.objects.order_by('sent_at').filter(conversation=Conversation.objects.get(id=id))
+        contextMsgs = []
+        for msg in msgs:
+            contextMsgs.append({'sender': msg.sender.profile.name, 'sent_at': msg.sent_at.strftime("%Y-%m-%d %H:%M:%S"), 'contents': msg.contents})
+            context['msgs'] = contextMsgs
+    except Message.DoesNotExist:
+        context['msgs'] = {}
+    return render(request, 'matchingapp/conversation.html', context)
+
+
+def cancelRequest(request):
+    if request.method == 'POST':
+        prof = Profile.objects.get(id=request.POST['id'])
+        mem = Member.objects.get(profile=prof)
+        user = Member.objects.get(username=request.session['username'])
+        if user in mem.match_requests.all():
+            mem.match_requests.remove(user)
+            mem.save()
+            return HttpResponse()
+        else:
+            return HttpResponseBadRequest(user.profile.name + " hasn't requested to match with " + prof.name)
+    else:
+        return HttpResponseBadRequest('Request must be post')

@@ -1,0 +1,61 @@
+{% extends "matchingapp/profile.html" %}
+
+{% load static %}
+
+{% block head %}
+<script src="{% static 'matchingapp/js/user_profile.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+    <button id="editBtn" onclick="switchToEdit()">Edit</button>
+    <button id="saveBtn" onclick="save()">Save</button>
+    <input type="file" name="newProfileImg" id="newProfileImg" onchange="uploadNewProfileImage()"/>
+    <div id="profileDiv">
+        <img id="profileImg" src="{{ profile.profile_image }}" height="200px">
+        <br />
+        <label for="name">Name:</label>
+        <span id="name">{{ profile.name }}</span>
+        <br />
+        <label for="dob">Date of Birth:</label>
+        <span id="dob">{{ profile.dob }}</span>
+        <br />
+        <label for="email">Email:</label>
+        <span id="email">{{ profile.email }}</span>
+        <br />
+        <label for="gender">Gender:</label>
+        <span id="gender">{{ profile.gender }}</span>
+        <br />
+        <label for="hobbies">Hobbies:</label>
+        <br />
+        {% for hobby in hobby_list %}
+            <label for="{{ hobby }}" id="{{ hobby }}-label">{{ hobby }}</label>
+           <input type="checkbox" name="hobby" value="{{ hobby }}" id="{{ hobby }}">
+            <br id="{{ hobby }}-br"/>
+        {% endfor %}
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        $('[name="hobby"]').hide();
+        $("[id*='label']").hide();
+        $("[id*='br']").hide();
+        $('#saveBtn').hide();
+        $('#requestMatch').hide();
+        if (JSON.stringify({{ profile|safe }}) === "{}")
+        {
+            profile = {};
+            switchToEdit();
+        } else {
+            profile = {{ profile|safe }};
+            profile_img = "{{ profile.profile_image.url }}";
+            hobbies = JSON.parse(profile.hobbies);
+            hobbies.forEach(function (hobby) {
+                $('#' + hobby.fields.name + "-label").show();
+                $('#' + hobby.fields.name + "-br").show();
+                $('#' + hobby.fields.name).prop('checked', true);
+            });
+        }
+    </script>
+
+{% endblock %}

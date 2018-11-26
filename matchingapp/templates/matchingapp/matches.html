@@ -1,0 +1,36 @@
+{% extends "matchingapp/base.html" %}
+
+{% load static %}
+
+{% block head %}
+<script src="{% static 'matchingapp/js/matches.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+    <div id="matchRequests">
+        <h3>Match Requests</h3>
+        <table id="matchRequestTable">
+            <tr>
+                <th>Name</th><th>Action</th>
+            </tr>
+            {% for request in match_requests %}
+                <tr id="req{{ request.id }}">
+                    <td>{{ request.name }}</td><td><i onclick="manageRequest({{ request.id }}, 'accept')" class="material-icons">done</i><i onclick="manageRequest({{ request.id }}, 'reject')" class="material-icons">clear</i></td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <div id="matches">
+        <h3>Matches</h3>
+        <table id="matchesTable">
+            <tr>
+                <th>Name</th><th>Action</th>
+            </tr>
+            {% for match in matches %}
+                <tr id="match{{ match.id }}">
+                    <td>{{ match.name }}</td><td><a href="/findConvo/{{ match.id }}/"><i class="material-icons">mail</i></a><i onclick="deleteMatch({{ match.id }})" class="material-icons">clear</i></td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+{% endblock %}

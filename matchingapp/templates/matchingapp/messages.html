@@ -1,0 +1,17 @@
+{% extends "matchingapp/base.html" %}
+
+{% load staticfiles %}
+
+{% block content %}
+    <table id="conversationTables">
+        <tr>
+            <th>Name</th>
+{#            <th>Action</th>#}
+        </tr>
+        {% for conversation in conversations %}
+            <tr>
+                <td><a href="/messages/{{ conversation.id }}">{{ conversation.name }}</a></td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}
