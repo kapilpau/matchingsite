@@ -14,7 +14,7 @@ def loggedin(view):
         if 'username' in request.session:
             return view(request)
         else:
-            return render(request, 'matchingapp/login.html', getContext())
+            return render(request, 'matchingapp/login.html', getContext(request))
     return mod_view
 
 
@@ -314,13 +314,21 @@ def deleteMatch(request):
         return HttpResponseBadRequest()
 
 
+@loggedin
 def messages(request):
     convos = Conversation.objects.all()
     user = Member.objects.get(username=request.session['username'])
     contextConvos = []
     for convo in convos:
         if user in convo.participants.all():
-            contextConvos.append({'id': convo.id, 'name': convo.name})
+            readStatus = False
+            print(Message.objects.order_by('sent_at').filter(conversation=convo))
+            try:
+                if user in Message.objects.order_by('sent_at').filter(conversation=convo).last().read_by.all():
+                    readStatus = True
+            except AttributeError:
+                readStatus = True
+            contextConvos.append({'id': convo.id, 'name': convo.name, 'read': readStatus})
     context = getContext(request)
     context['conversations'] = contextConvos
     return render(request, 'matchingapp/messages.html', context)
@@ -348,10 +356,13 @@ def conversation(request, id):
     context = getContext(request)
     try:
         msgs = Message.objects.order_by('sent_at').filter(conversation=Conversation.objects.get(id=id))
+        user = Member.objects.get(username=request.session['username'])
         contextMsgs = []
         for msg in msgs:
             contextMsgs.append({'sender': msg.sender.profile.name, 'sent_at': msg.sent_at.strftime("%Y-%m-%d %H:%M:%S"), 'contents': msg.contents})
             context['msgs'] = contextMsgs
+            msg.read_by.add(user)
+            msg.save()
     except Message.DoesNotExist:
         context['msgs'] = {}
     return render(request, 'matchingapp/conversation.html', context)

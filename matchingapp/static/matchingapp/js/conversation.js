@@ -1,5 +1,6 @@
 let ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
 let chat_socket = new WebSocket(ws_scheme + '://' + window.location.host + "/chat/" + window.location.pathname.split('/')[2] + "/");
+$("#chatHistory").scrollTop($("#chatHistory").height());
 
 function sendMsg() {
     let message = {
@@ -30,13 +31,15 @@ chat_socket.onmessage = function(resp) {
             document.getElementById('chatHistory').innerHTML += newMsg + "<br />";
         }
     } else if (resp.data === 'MessageReceived'){
-        $('#compose').value = "";
+        $('#compose').val("");
     }
 
 };
 
-// chat_socket.onclose = function () {
-//   setTimeout(function(){
-//       chat_socket = new WebSocket(ws_scheme + '://' + window.location.host + "/chat/" + window.location.pathname.split('/')[2] + "/");
-//   }, 1000);
-// };
+chat_socket.onclose = function () {
+    console.log("Socket closed");
+      setTimeout(function(){
+          chat_socket = new WebSocket(ws_scheme + '://' + window.location.host + "/chat/" + window.location.pathname.split('/')[2] + "/");
+      }, 1000);
+
+};

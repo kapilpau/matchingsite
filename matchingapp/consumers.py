@@ -8,9 +8,7 @@ class ChatConsumer(AsyncConsumer):
     user = None
 
     async def websocket_connect(self, event):
-        print('Headers:')
         self.user = Member.objects.get(username=self.scope['session']['username'])
-        print(self.scope['headers'])
         print(event)
         await self.send({
             "type": "websocket.accept",
@@ -42,6 +40,7 @@ class ChatConsumer(AsyncConsumer):
         await self.channel_layer.group_send(self.convo_id, {
             "type": "websocket.send",
             "text": {
+                "msgID": mes.id,
                 "sender": mes.sender.profile.name,
                 "contents": mes.contents,
                 "sent_at": mes.sent_at.strftime("%Y-%m-%d %H:%M:%S")
@@ -52,7 +51,12 @@ class ChatConsumer(AsyncConsumer):
         print(event)
         print("Disconnected")
 
-
-    async  def websocket_send(self, event):
-        await self.send({"type": "websocket.send", "text": json.dumps(event)})
-        print({"type": "websocket.send", "text": event})
+    async def websocket_send(self, event):
+        event['user'] = self.user.profile.name
+        text = json.dumps(event)
+        await self.send({"type": "websocket.send", "text": text})
+        msg = Message.objects.get(id=event['text']['msgID'])
+        print(msg.contents)
+        print(self.user.profile.name)
+        msg.read_by.add(self.user)
+        msg.save()

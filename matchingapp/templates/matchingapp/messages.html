@@ -10,7 +10,11 @@
         </tr>
         {% for conversation in conversations %}
             <tr>
-                <td><a href="/messages/{{ conversation.id }}">{{ conversation.name }}</a></td>
+                {% if conversation.read == True %}
+                    <td><a href="/messages/{{ conversation.id }}">{{ conversation.name }}</a></td>
+                {% else %}
+                    <td><a href="/messages/{{ conversation.id }}"><strong>{{ conversation.name }}</strong></a></td
+                {% endif %}
             </tr>
         {% endfor %}
     </table>
