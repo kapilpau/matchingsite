@@ -7,8 +7,34 @@ body {
     width: 30%;
 }
 
-label, input, table {
-    
+#profileBtns{
+    width: 20%;
+    margin: 0 auto;
+}
+
+#profileDiv {
+    text-align: center;
+    width: 20%;
+    margin: 0 auto;
+    clear: both;
+    font-family: Arial;
+}
+
+.profileLabel {
+    background-color: #aae6e7;
+    font-weight: bold;
+    text-transform: uppercase;
+    padding: 2px;
+    display: inline-block;
+    width: 200px;
+}
+
+#homeBtn, #profileBtn, #signOutBtn {
+    font-size: 16px;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-decoration: none;
+    font-family: Verdana;
 }
 
 h1 {
@@ -17,3 +43,16 @@ h1 {
     font-family: "Stencil Std", cursive;
 }
 
+#loginBtn, #signupBtn, #editBtn, #saveBtn {
+    background-color: #2196f3;
+    border: none;
+    color: white;
+    padding: 7px 15px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    margin-top: 20px;
+    cursor: pointer;
+}
