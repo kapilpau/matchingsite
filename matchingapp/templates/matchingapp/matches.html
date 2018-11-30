@@ -7,11 +7,11 @@
 {% endblock %}
 
 {% block content %}
-    <div id="matchRequests">
-        <h3>Match Requests</h3>
+    <div align="center" id="matchRequests">
+        <h2>Match Requests</h2>
         <table id="matchRequestTable">
             <tr>
-                <th>Name</th><th>Action</th>
+                <th class="profileLabel">Name</th><th class="profileLabel">Action</th>
             </tr>
             {% for request in match_requests %}
                 <tr id="req{{ request.id }}">
@@ -20,16 +20,18 @@
             {% endfor %}
         </table>
     </div>
-    <div id="matches">
-        <h3>Matches</h3>
+    <div align="center" id="matches">
+        <h2>Matches</h2>
         <table id="matchesTable">
             <tr>
-                <th>Name</th><th>Action</th>
+                <th class="profileLabel">Name</th>
+                <th class="profileLabel">Action</th>
             </tr>
             {% for match in matches %}
-                <tr id="match{{ match.id }}">
-                    <td>{{ match.name }}</td><td><a href="/findConvo/{{ match.id }}/"><i class="material-icons">mail</i></a><i onclick="deleteMatch({{ match.id }})" class="material-icons">clear</i></td>
-                </tr>
+            <tr id="match{{ match.id }}">
+                <th>{{ match.name }}</th>
+                <th><a href="/findConvo/{{ match.id }}/"><i class="material-icons">mail</i></a><i onclick="deleteMatch({{ match.id }})" class="material-icons">clear</i></th>
+            </tr>
             {% endfor %}
         </table>
     </div>

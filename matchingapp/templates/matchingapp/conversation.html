@@ -7,7 +7,8 @@
 {% endblock %}
 
 {%  block content %}
-<div id="chatHistory" style="overflow: scroll; overflow-y: auto; height: 300px; width: 700px; border: 1px solid">
+<br/>
+<div align="center" id="chatHistory" style="overflow: scroll; margin:0 auto; overflow-y: auto; height: 300px; width: 700px; border: 1px solid">
 {%  if msgs|length == 0  %}
     No messages sent yet, send one now
 {% else %}
@@ -17,8 +18,9 @@
 {% endif %}
 </div>
 
-<textarea id="compose" placeholder="Compose message" style="width: 696px; border: 1px solid"></textarea>
-<div id="sendBtnDiv">
+<div align="center" id="sendBtnDiv">
+    <textarea id="compose" placeholder="Compose message" style="width: 696px; border: 1px solid"></textarea>
+    <br/>
     <button id="send" onclick="sendMsg()">Send</button>
 </div>
 {% endblock %}

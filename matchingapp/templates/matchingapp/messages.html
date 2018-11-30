@@ -3,19 +3,22 @@
 {% load staticfiles %}
 
 {% block content %}
-    <table id="conversationTables">
+    <div align="center">
+    <h2>Messages</h2>
+    <table id="conversationTables" style="font-family: Arial;">
         <tr>
-            <th>Name</th>
-{#            <th>Action</th>#}
+              <th class="profileLabel">Name</th>
+{#            <th class="profileLabel">Action</th>#}
         </tr>
         {% for conversation in conversations %}
             <tr>
                 {% if conversation.read == True %}
                     <td><a href="/messages/{{ conversation.id }}">{{ conversation.name }}</a></td>
                 {% else %}
-                    <td><a href="/messages/{{ conversation.id }}"><strong>{{ conversation.name }}</strong></a></td
+                    <td><a href="/messages/{{ conversation.id }}">{{ conversation.name }}</a></td>
                 {% endif %}
             </tr>
         {% endfor %}
     </table>
+    </div>
 {% endblock %}

@@ -4,39 +4,40 @@
 
 
 {% block content %}
-    <div align="center" id="usersDiv">
-        <br/>
-        <table id="usersTable">
-            <tr id="usersTopRow">
-                <th>Name</th>
-                <th>Hobbies</th>
-            </tr>
-        </table>
-    </div>
-    <div>
-        <table>
-            <tr>
-                <input type="checkbox" id="Male_chckbox" checked><label for="Male_chckbox">Male</label>
-                <input type="checkbox" id="Female_chckbox" checked><label for="Female_chckbox">Female</label>
-                <input type="checkbox" id="Other_chckbox" checked><label for="Other_chckbox">Other</label>
-            </tr>
-            <tr>
-                <td>
-                    <p>
-                      <label for="age_range">Age range:</label>
-                      <input type="text" id="age_range" readonly style="border:0; color:#f6931f; font-weight:bold;">
+<div align="center">
+    <h2>Filter users:</h2>
+    <table id="filterTable">
+        <tr>
+            <input class="css-checkbox" type="checkbox" id="Male_chckbox" checked><label class="css-label" for="Male_chckbox">Male</label>
+            <input class="css-checkbox" type="checkbox" id="Female_chckbox" checked><label class="css-label" for="Female_chckbox">Female</label>
+            <input class="css-checkbox" type="checkbox" id="Other_chckbox" checked><label class="css-label" for="Other_chckbox">Other</label>
+        </tr>
+        <tr>
+            <td>
+                <p>
+                <label for="age_range">Age range:</label>
+                <input type="text" id="age_range" readonly style="border:0; color:#f6931f; font-weight:bold; height: 20px; width: 150px; font-size: 1em; text-align: center; color: #2196f3;">
                     </p>
-
+                    
                     <div id="slider-range"></div>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <button onclick="updateList()">Filter</button>
-                </td>
-            </tr>
-        </table>
-    </div>
+                    </td>
+        </tr>
+        <tr>
+            <td>
+                <div align="center"><button id="filterBtn" onclick="updateList()">Filter</button></div>
+            </td>
+        </tr>
+    </table>
+</div>
+<div align="center" id="usersDiv">
+    <br/>
+    <table id="usersTable">
+        <tr id="usersTopRow">
+            <th>Name</th>
+            <th>Hobbies</th>
+        </tr>
+    </table>
+</div>
 {% endblock %}
 
 
