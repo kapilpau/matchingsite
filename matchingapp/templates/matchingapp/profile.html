@@ -8,25 +8,21 @@
 {% endblock %}
 
 {% block content %}
-    <div id="controlsDiv">
+    <div align="center" id="controlsDiv">
     {% if match_status == 0 %}
-        <button onclick="requestMatch({{ profile.id }})">Request Match</button>
+        <button class="matchBtn" onclick="requestMatch({{ profile.id }})">Request Match</button>
     {% elif match_status == 1 %}
-        <button onclick="manageRequest({{ profile.id }}, 'accept')">Accept Match Request</button>
-        <button onclick="manageRequest({{ profile.id }}, 'reject')">Reject Match Request</button>
+        <button class="matchBtn" onclick="manageRequest({{ profile.id }}, 'accept')">Accept Match Request</button>
+        <button class="matchBtn" onclick="manageRequest({{ profile.id }}, 'reject')">Reject Match Request</button>
     {% elif match_status == 2 %}
         <a href="/findConvo/{{ profile.id }}/"><button>Send message</button></a>
-        <button onclick="deleteMatch({{ profile.id }})">Delete Match</button>
+        <button class="matchBtn" onclick="deleteMatch({{ profile.id }})">Delete Match</button>
     {% elif match_status == 3 %}
-        <button onclick="cancelRequest({{ profile.id }})">Cancel Request</button>
+        <button class="matchBtn" onclick="cancelRequest({{ profile.id }})">Cancel Request</button>
     {% endif %}
     </div>
     <div id="profileDiv">
         <img id="profileImg" src="../..{{ profile.profile_image }}" height="200px">
-
-        <br />
-        <input align="right" type="file" name="newProfileImg" id="newProfileImg" onchange="uploadNewProfileImage()"/>
-        <img id="profileImg" src="{{ profile.profile_image }}" height="200px">
         <br /><br />
         <label class="profileLabel" for="name">Name:</label><br />
         <span id="name">{{ profile.name }}</span>
@@ -41,7 +37,6 @@
         <span id="gender">{{ profile.gender }}</span>
         <br /><br />
         <label class="profileLabel" for="hobbies">Hobbies:</label>
-        <br />
         {% for hobby in profile.hobbies %}
             <p id="{{ hobby }}-label">{{ hobby }}</p>
         {% endfor %}

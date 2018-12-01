@@ -1,5 +1,5 @@
 body {
-    background-color: #fafafa;
+    background-color: #b3e5fc;
 }
 
 .main {
@@ -21,10 +21,11 @@ body {
 }
 
 .profileLabel {
-    background-color: #aae6e7;
+    background-color: #263238;
     font-weight: bold;
     text-transform: uppercase;
     padding: 2px;
+    color: white;
     display: inline-block;
     width: 200px;
 }
@@ -42,23 +43,105 @@ body {
     margin: 0 auto;
 }
 
-#usersTable {
+#usersTable{
     width: 30%;
     font-family: Arial;
 }
 
 #usersTopRow {
-    background-color: #aae6e7;
+    background-color: #263238;
     font-weight: bold;
     font-size: 16px;
+    color: white;
 }
 
-#homeBtn, #profileBtn, #signOutBtn {
+#filterTable, label {
+    font-family: Arial;
+}
+
+#homeBtn, #profileBtn, #signOutBtn, #matchesBtn, #messagesBtn {
     font-size: 16px;
-    font-weight: bold;
     text-transform: uppercase;
     text-decoration: none;
-    font-family: Verdana;
+    font-family: Arial;
+    color: white;
+}
+
+.header {
+    overflow: hidden;
+    background-color: #263238;
+    padding: 20px 10px;
+}
+
+.header a {
+    float: center;
+    color: white;
+    text-align: center;
+    padding: 12px;
+    text-decoration: none;
+    font-size: 18px;
+    line-height: 25px;
+    border-radius: 4px;
+}
+
+.header a.logo {
+    font-size: 35px;
+    font-weight: bold;
+    text-shadow: 1px 1px grey;
+    font-family: "Stencil Std", cursive;
+    float: center;
+}
+
+.header a:hover {
+    background-color: #607d8b;
+    color: black;
+}
+
+.header a.active {
+    background-color: dodgerblue;
+    color: white;
+}
+
+.header-right {
+    float: right;
+}
+
+@media screen and (max-width: 500px) {
+    .header a {
+        float: none;
+        display: block;
+        text-align: left;
+    }
+    .header-right {
+        float: none;
+    }
+}
+
+.ui-slider .ui-slider-range {
+    -webkit-appearance: none;
+    height: 25px !important;
+    background: #2196f3;
+    outline: none;
+    opacity: 0.8;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+}
+
+#slider-range {
+    height: 25px !important;
+}
+
+.slider:hover {
+    opacity: 1;
+}
+
+.ui-slider-handle{
+    -webkit-appearance: none;
+    appearance: none;
+    width: 30px !important;
+    height: 30px !important;
+    background: #2196f3 !important;
+    cursor: pointer;
 }
 
 h1 {
@@ -67,7 +150,11 @@ h1 {
     font-family: "Stencil Std", cursive;
 }
 
-#loginBtn, #signupBtn, #editBtn, #saveBtn {
+h2 {
+    font-family: Arial;
+}
+
+button {
     background-color: #2196f3;
     border: none;
     color: white;
@@ -79,4 +166,46 @@ h1 {
     margin: 4px 2px;
     margin-top: 20px;
     cursor: pointer;
+}
+
+#imageFile {
+    padding: 10px !important;
+    background: #2196f3 !important;
+    display: table !important;
+    color: #fff !important;
+}
+
+input[type="file"] {
+    display: none;
+}
+
+input[type=checkbox].css-checkbox {
+    position:absolute; z-index:-1000; left:-1000px; overflow: hidden; clip: rect(0 0 0 0); height:1px; width:1px; margin:-1px; padding:0; border:0;
+}
+
+input[type=checkbox].css-checkbox + label.css-label {
+    padding-left:35px;
+    padding-right:35px;
+    height:30px;
+    display:inline-block;
+    line-height:30px;
+    background-repeat:no-repeat;
+    background-position: 0 0;
+    font-size:16px;
+    vertical-align:middle;
+    cursor:pointer;
+    
+}
+
+input[type=checkbox].css-checkbox:checked + label.css-label {
+    background-position: 0 -30px;
+}
+label.css-label {
+    background-image:url(http://csscheckbox.com/checkboxes/u/csscheckbox_f60067e68146be412873f96f1d2458cd.png);
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
