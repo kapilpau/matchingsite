@@ -43,6 +43,9 @@
 
 {% block script %}
     <script>
+        document.getElementById("Male_chckbox").checked = true;
+        document.getElementById("Female_chckbox").checked = true;
+        document.getElementById("Other_chckbox").checked = true;
         var profiles;
         var csrftoken = Cookies.get('csrftoken');
         var slider =  $("#slider-range");
