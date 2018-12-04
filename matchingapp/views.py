@@ -14,7 +14,11 @@ salt = b'$2b$12$Jx1Vfxjy0iuMxP0cBeDctu'
 def loggedin(view):
     def mod_view(request):
         if 'username' in request.session:
-            return view(request)
+            try:
+                return view(request)
+            except Member.DoesNotExist:
+                request.session.flush()
+                return render(request, 'matchingapp/login.html', getContext(request))
         else:
             return render(request, 'matchingapp/login.html', getContext(request))
     return mod_view
@@ -71,7 +75,7 @@ def signup(request):
                 return HttpResponseBadRequest('Username already taken')
 
 
-@loggedin
+# @loggedin
 def profile(request, prof=None):
     pfl = Profile.objects.get(id=prof)
     print(pfl)
