@@ -42,6 +42,7 @@
     <div align="center">
         <button id="editBtn" onclick="switchToEdit()">Edit</button>
         <button id="saveBtn" onclick="save()">Save</button>
+        <p id="errorMsg" style="color: red"></p>
     </div>
 {% endblock %}
 
@@ -55,6 +56,7 @@
         if (JSON.stringify({{ profile|safe }}) === "{}")
         {
             profile = {};
+            $('#newProfileImg').hide();
             switchToEdit();
         } else {
             profile = {{ profile|safe }};

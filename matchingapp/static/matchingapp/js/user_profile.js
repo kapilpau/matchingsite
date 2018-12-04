@@ -19,33 +19,39 @@ function switchToEdit() {
 
 function save() {
     let submittable = true;
+    document.getElementById('errorMsg').innerText = "";
     if (document.getElementById('name').value === "" || !/^[a-zA-Z ]+$/.test(document.getElementById('name').value))
     {
         document.getElementById('name').style.borderColor = 'red';
+        document.getElementById('errorMsg').innerText += "Name cannot be empty or have non-alphabetic characters<br />";
         submittable = false;
     }
 
     if (document.getElementById('dob').value === "" ||  (new Date() - new Date(document.getElementById('dob').value))/(1000*60*60*24*365) < 18 || (new Date() - new Date(document.getElementById('dob').value))/(1000*60*60*24*365) > 99)
     {
         document.getElementById('dob').style.borderColor = 'red';
+        document.getElementById('errorMsg').innerText += "Must be between 18 and 99<br />";
         submittable = false;
     }
 
     if (document.getElementById('gender').value === "")
     {
         document.getElementById('gender').style.borderColor = 'red';
+        document.getElementById('errorMsg').innerText += "Must select a gender<br />";
         submittable = false;
     }
 
     if (document.getElementById('email').value === "" || !/^[a-zA-Z0-9_\-]+@{1}[a-zA-Z0-9_\-]+\.[a-z]+$/.test(document.getElementById('email').value))
     {
         document.getElementById('email').style.borderColor = 'red';
+        document.getElementById('errorMsg').innerText += "Invalid or blank email address<br />";
         submittable = false;
     }
 
     if (document.querySelectorAll('input[type="checkbox"]:checked').length === 0)
     {
         document.getElementById('hobbiesDiv').style.border = 'solid red';
+        document.getElementById('errorMsg').innerText += "Must select at least one hobby<br />";
         submittable = false;
     }
 
