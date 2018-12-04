@@ -75,7 +75,6 @@ def signup(request):
                 return HttpResponseBadRequest('Username already taken')
 
 
-# @loggedin
 def profile(request, prof=None):
     pfl = Profile.objects.get(id=prof)
     print(pfl)
@@ -349,7 +348,6 @@ def messages(request):
     return render(request, 'matchingapp/messages.html', context)
 
 
-@loggedin
 def convoRedirect(request, id):
     prof = Member.objects.get(profile=Profile.objects.get(id=id))
     user = Member.objects.get(username=request.session['username'])
@@ -368,7 +366,6 @@ def convoRedirect(request, id):
     return redirect('/messages/' + str(convo.id))
 
 
-@loggedin
 def conversation(request, id):
     context = getContext(request)
     try:
