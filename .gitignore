@@ -2,3 +2,5 @@
 matchingsite/matchingsite/__pycache__/
 matchingsite/migrations/
 db.sqlite3
+*.pyc
+*.png
