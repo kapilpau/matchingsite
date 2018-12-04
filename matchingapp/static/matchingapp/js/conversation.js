@@ -38,8 +38,6 @@ chat_socket.onmessage = function(resp) {
 
 chat_socket.onclose = function () {
     console.log("Socket closed");
-      setTimeout(function(){
-          chat_socket = new WebSocket(ws_scheme + '://' + window.location.host + "/chat/" + window.location.pathname.split('/')[2] + "/");
-      }, 1000);
+    alert('Connection to chat server has been lost, please reload the page');
 
 };

@@ -25,66 +25,79 @@
 <script>
 
 $(document).ready(function (e) {
-    $('#signOutBtn').hide()
-    $('#matchesBtn').hide()
+    $('#homeBtn').hide();
+    $('#matchesBtn').hide();
+    $('#messagesBtn').hide();
+    $('#signOutBtn').hide();
 });
 
 
 var csrftoken = Cookies.get('csrftoken');
 $('#loginBtn').click(function () {
-    $.ajax({
-        url: '',
-        type: 'POST',
-        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-        data: {
-            username: $('#username').val(),
-            password: $('#password').val(),
-            csrfmiddlewaretoken: csrftoken
-        },
-        success: function (data) {
-            console.log("Success");
-            window.location.replace('..')
-        },
-        failure: function (data) {
-            console.log(data);
-            document.getElementById('username').style.borderColor = 'red';
-            document.getElementById('password').style.borderColor = 'red';
-        },
-        error: function(jqXHR, textStatus, error){
-            console.log("Error");
-            document.getElementById('username').style.borderColor = 'red';
-            document.getElementById('password').style.borderColor = 'red';
-        }
-    });
-});
-$('#signupBtn').click(function () {
-    $.ajax({
-        url: '../signup/',
-        type: 'POST',
-        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-        data: {
-            username: $('#username').val(),
-            password: $('#password').val(),
-            csrfmiddlewaretoken: csrftoken
-        },
-        success: function (data) {
-            console.log("Success");
-            window.location.replace('..')
-        },
-        failure: function (data) {
-            console.log(data);
-            document.getElementById('username').style.borderColor = 'red';
-            document.getElementById('password').style.borderColor = 'red';
-        },
-        error: function(jqXHR, textStatus, error){
-            console.log("Error");
-            if (jqXHR.responseText === "Username already taken")
-            {
+    if (!document.getElementById('username').value || !document.getElementById('password').value)
+    {
+        alert("Fields cannot be empty");
+    } else {
+        $.ajax({
+            url: '',
+            type: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            data: {
+                username: $('#username').val(),
+                password: $('#password').val(),
+                csrfmiddlewaretoken: csrftoken
+            },
+            success: function (data) {
+                console.log("Success");
+                window.location.replace('..')
+            },
+            failure: function (data) {
+                console.log(data);
                 document.getElementById('username').style.borderColor = 'red';
-                alert("Username already taken");
+                document.getElementById('password').style.borderColor = 'red';
+            },
+            error: function(jqXHR, textStatus, error){
+                console.log("Error");
+                document.getElementById('username').style.borderColor = 'red';
+                document.getElementById('password').style.borderColor = 'red';
             }
-        }
-    });
+        });
+    }
+});
+
+
+$('#signupBtn').click(function () {
+    if (!document.getElementById('username').value || !document.getElementById('password').value)
+    {
+        alert("Fields cannot be empty");
+    } else {
+        $.ajax({
+            url: '../signup/',
+            type: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            data: {
+                username: $('#username').val(),
+                password: $('#password').val(),
+                csrfmiddlewaretoken: csrftoken
+            },
+            success: function (data) {
+                console.log("Success");
+                window.location.replace('..')
+            },
+            failure: function (data) {
+                console.log(data);
+                document.getElementById('username').style.borderColor = 'red';
+                document.getElementById('password').style.borderColor = 'red';
+            },
+            error: function (jqXHR, textStatus, error) {
+                console.log("Error");
+                if (jqXHR.responseText === "Username already taken") {
+                    document.getElementById('username').style.borderColor = 'red';
+                    alert("Username already taken");
+                }
+            }
+        });
+    }
 });
 </script>
 

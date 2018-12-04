@@ -28,13 +28,15 @@
         <br /><br/>
         <label class="profileLabel" for="gender">Gender:</label><br/>
         <span id="gender">{{ profile.gender }}</span>
-        <br /><br/>
         <label class="profileLabel" for="hobbies">Hobbies:</label><br/>
-        {% for hobby in hobby_list %}
-            <label for="{{ hobby }}" id="{{ hobby }}-label">{{ hobby }}</label>
-           <input type="checkbox" name="hobby" value="{{ hobby }}" id="{{ hobby }}">
-            <br id="{{ hobby }}-br"/>
-        {% endfor %}
+        <br /><br/>
+        <div id="hobbiesDiv">
+            {% for hobby in hobby_list %}
+                <label for="{{ hobby }}" id="{{ hobby }}-label">{{ hobby }}</label>
+               <input type="checkbox" name="hobby" value="{{ hobby }}" id="{{ hobby }}">
+                <br id="{{ hobby }}-br"/>
+            {% endfor %}
+        </div>
     </div>
     <div align="center">
         <button id="editBtn" onclick="switchToEdit()">Edit</button>

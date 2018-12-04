@@ -20,11 +20,13 @@ def loggedin(view):
     return mod_view
 
 
+@loggedin
 def index(request):
     context = getContext(request)
     return render(request, 'matchingapp/index.html', context)
 
 
+@loggedin
 def admin(request):
     context = getContext(request)
     return render(request, 'matchingapp/admin.html', context)
@@ -69,6 +71,7 @@ def signup(request):
                 return HttpResponseBadRequest('Username already taken')
 
 
+@loggedin
 def profile(request, prof=None):
     pfl = Profile.objects.get(id=prof)
     print(pfl)
@@ -95,6 +98,7 @@ def profile(request, prof=None):
     return render(request, 'matchingapp/profile.html', context)
 
 
+@loggedin
 def userProfile(request):
     context = getContext(request)
     hobby_set = Hobby.objects.values_list('name', flat=True)
@@ -249,6 +253,7 @@ def signout(request):
     return redirect('/login/')
 
 
+@loggedin
 def requestMatch(request):
     prof = Profile.objects.get(id=request.POST['id'])
     mem = Member.objects.get(profile=prof)
@@ -268,12 +273,14 @@ def requestMatch(request):
     return HttpResponse()
 
 
+@loggedin
 def matches(request):
     context = getContext(request)
     print(context)
     return render(request, 'matchingapp/matches.html', context)
 
 
+@loggedin
 def manageRequest(request):
     if request.method == 'POST':
         prof = Profile.objects.get(id=request.POST['id'])
@@ -298,6 +305,7 @@ def manageRequest(request):
         return HttpResponseBadRequest()
 
 
+@loggedin
 def deleteMatch(request):
     if request.method == 'POST':
         prof = Profile.objects.get(id=request.POST['id'])
@@ -337,6 +345,7 @@ def messages(request):
     return render(request, 'matchingapp/messages.html', context)
 
 
+@loggedin
 def convoRedirect(request, id):
     prof = Member.objects.get(profile=Profile.objects.get(id=id))
     user = Member.objects.get(username=request.session['username'])
@@ -355,6 +364,7 @@ def convoRedirect(request, id):
     return redirect('/messages/' + str(convo.id))
 
 
+@loggedin
 def conversation(request, id):
     context = getContext(request)
     try:
@@ -371,6 +381,7 @@ def conversation(request, id):
     return render(request, 'matchingapp/conversation.html', context)
 
 
+@loggedin
 def cancelRequest(request):
     if request.method == 'POST':
         prof = Profile.objects.get(id=request.POST['id'])

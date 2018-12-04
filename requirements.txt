@@ -4,3 +4,4 @@ aiohttp
 channels
 channels_redis
 bcrypt
+service_identity

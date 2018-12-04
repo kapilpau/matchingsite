@@ -18,7 +18,42 @@ function switchToEdit() {
 }
 
 function save() {
-    var csrftoken = Cookies.get('csrftoken');
+    let submittable = false;
+    if (name === "" || !/^[a-zA-Z ]+$/.test(name))
+    {
+        document.getElementById('name').style.borderColor = 'red';
+        submittable = true;
+    }
+
+    if ((new Date() - new Date(document.getElementById('dob').value))/(1000*60*60*24*365) < 18 || (new Date() - new Date(document.getElementById('dob').value))/(1000*60*60*24*365) > 120)
+    {
+        document.getElementById('dob').style.borderColor = 'red';
+        submittable = true;
+    }
+
+    if (document.getElementById('gender').value === "")
+    {
+        document.getElementById('gender').style.borderColor = 'red';
+        submittable = true;
+    }
+
+    if (document.getElementById('email').value === "")
+    {
+        document.getElementById('email').style.borderColor = 'red';
+        submittable = true;
+    }
+
+    if ($('[name="hobby"]').length === 0)
+    {
+        document.getElementById('hobbiesDiv').style.borderColor = 'red';
+        submittable = true;
+    }
+
+    if (!submittable){
+        return;
+    }
+
+    let csrftoken = Cookies.get('csrftoken');
     $('[name="hobby"]').hide();
     $("[id*='label']").hide();
     $("[id*='br']").hide();
@@ -29,15 +64,14 @@ function save() {
     profile.email = document.getElementById('email').value;
     profile.gender = document.getElementById('gender').value;
     var checkedHobbies = [];
-    var selected = $('[name="hobby"]')
+    var selected = $('[name="hobby"]');
     for (var i = 0; i<selected.length; i++)
     {
         if (selected[i].checked)
         {
             checkedHobbies.push(selected[i].id);
-            // $('[id='+selected[i].id+']').show();
-            $('[id='+selected[i].id+'-label]').show();
-            $('[id='+selected[i].id+'-br]').show();
+            $('[id='+selected[i].id.replace(/\s/g, "")+'-label]').show();
+            $('[id='+selected[i].id.replace(/\s/g, "")+'-br]').show();
         }
     }
     profile.checkedHobbies = checkedHobbies;
