@@ -41,7 +41,7 @@ function save() {
         submittable = false;
     }
 
-    if (document.getElementById('email').value === "" || !/^[a-zA-Z0-9_\-]+@{1}[a-zA-Z0-9_\-]+\.[a-z]+$/.test(document.getElementById('email').value))
+    if (document.getElementById('email').value === "" || !/^[a-zA-Z0-9_\-.]+@[a-zA-Z0-9_\-.]+\.[a-z]+$/.test(document.getElementById('email').value))
     {
         document.getElementById('email').style.borderColor = 'red';
         document.getElementById('errorMsg').innerText += "Invalid or blank email address<br />";
