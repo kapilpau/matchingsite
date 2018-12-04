@@ -9,7 +9,8 @@
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-
+    <link rel="shortcut icon" href="/media/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/media/favicon.ico" type="image/x-icon">
 	{% block head %}
 	{% endblock %}
     {% csrf_token %}
@@ -24,7 +25,7 @@
 </head>
 <body>
     <div align="center" class="header">
-      <a href="/" class="logo">Matching Site</a><br/><br/><br/>
+      <a href="/" class="logo">{{ siteName }}</a><br/><br/><br/>
       <a id="homeBtn" href="/">Home</a>&nbsp&nbsp&nbsp&nbsp
         <a id="profileBtn" href="/profile">Profile</a>&nbsp&nbsp&nbsp&nbsp
         <a id="matchesBtn" href="/matches">Matches</a>&nbsp&nbsp&nbsp&nbsp

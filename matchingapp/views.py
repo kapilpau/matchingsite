@@ -175,7 +175,7 @@ def getContext(request):
         match_requests = []
         request.session['match_requests'] = []
     #     Graftr/Bindr
-    context = {'siteName': 'Graftr', 'username': user, 'isAdmin': isAdmin, 'profile': profile, 'matches': matches, 'match_requests': match_requests}
+    context = {'siteName': 'LinkUp', 'username': user, 'isAdmin': isAdmin, 'profile': profile, 'matches': matches, 'match_requests': match_requests}
     return context
 
 
