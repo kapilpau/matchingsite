@@ -15,15 +15,10 @@ class ChatConsumer(AsyncConsumer):
         })
 
     async def websocket_receive(self, event):
-        print(event)
-        print(self.convo_id)
         msg = json.loads(event['text'])
-        print("Msg:")
         try:
             if msg['command'] == 'join':
                 self.convo_id = msg['convoID']
-                print("Convo id")
-                print(type(self.convo_id))
                 await self.channel_layer.group_add(self.convo_id, self.channel_name)
                 await self.send({"type": "websocket.send", 'text': 'ConnectionSuccessful'})
                 return
@@ -56,7 +51,5 @@ class ChatConsumer(AsyncConsumer):
         text = json.dumps(event)
         await self.send({"type": "websocket.send", "text": text})
         msg = Message.objects.get(id=event['text']['msgID'])
-        print(msg.contents)
-        print(self.user.profile.name)
         msg.read_by.add(self.user)
         msg.save()

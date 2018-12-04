@@ -4,3 +4,4 @@ matchingsite/migrations/
 db.sqlite3
 *.pyc
 *.png
+*.rdb

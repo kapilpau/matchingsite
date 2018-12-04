@@ -371,8 +371,9 @@ def conversation(request, id):
     try:
         msgs = Message.objects.order_by('sent_at').filter(conversation=Conversation.objects.get(id=id))
         user = Member.objects.get(username=request.session['username'])
+        print(Conversation.objects.get(id=id).participants.all())
         if user not in Conversation.objects.get(id=id).participants.all():
-            redirect('/')
+            return redirect('/')
         contextMsgs = []
         for msg in msgs:
             contextMsgs.append({'sender': msg.sender.profile.name, 'sent_at': msg.sent_at.strftime("%Y-%m-%d %H:%M:%S"), 'contents': msg.contents})
