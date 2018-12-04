@@ -3,3 +3,4 @@ Pillow
 aiohttp
 channels
 channels_redis
+bcrypt
