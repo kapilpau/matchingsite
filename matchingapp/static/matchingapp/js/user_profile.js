@@ -25,7 +25,7 @@ function save() {
         submittable = false;
     }
 
-    if (document.getElementById('dob').value === "" ||  (new Date() - new Date(document.getElementById('dob').value))/(1000*60*60*24*365) < 18 || (new Date() - new Date(document.getElementById('dob').value))/(1000*60*60*24*365) > 120)
+    if (document.getElementById('dob').value === "" ||  (new Date() - new Date(document.getElementById('dob').value))/(1000*60*60*24*365) < 18 || (new Date() - new Date(document.getElementById('dob').value))/(1000*60*60*24*365) > 99)
     {
         document.getElementById('dob').style.borderColor = 'red';
         submittable = false;
