@@ -6,7 +6,9 @@ from django.core import serializers
 from django.db.models.functions import Lower, datetime
 import random, os
 from datetime import date
+from bcrypt import hashpw
 
+salt = b'$2b$12$Jx1Vfxjy0iuMxP0cBeDctu'
 
 # decorator that tests whether user is logged in
 def loggedin(view):
@@ -36,7 +38,7 @@ def login(request):
         if request.is_ajax():
             try:
                 mem = Member.objects.get(username=request.POST['username'])
-                if mem.password != request.POST['password']:
+                if mem.password != hashpw(request.POST['password'].encode('utf-8'), salt).decode("utf-8"):
                     return HttpResponseBadRequest('Incorrect password')
                 request.session['username'] = request.POST['username']
                 request.session['isAdmin'] = mem.isAdmin
@@ -56,7 +58,8 @@ def signup(request):
     if request.method == 'POST':
         if request.is_ajax():
             try:
-                mem = Member(username=request.POST['username'], password=request.POST['password'])
+                print(request.POST['password'])
+                mem = Member(username=request.POST['username'], password=hashpw(request.POST['password'].encode('utf-8'), salt).decode("utf-8"))
                 mem.save()
                 request.session['username'] = request.POST['username']
                 request.session['isAdmin'] = mem.isAdmin
