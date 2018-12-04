@@ -14,6 +14,7 @@
             <label class="loginLabel" for="password">Password: </label>
             <br/>
             <input type="password" id="password" placeholder="Password"/><br />
+            <p>Password must be at least 8 characters long and contain a combination of lower-case letters, upper-case letters, digits and special characters (!@_)</p>
             <input type="button" name="Log In" value="Log In" id="loginBtn"/>
             <input type="button" name="Sign Up" value="Sign Up" id="signupBtn"/>
         </table>
@@ -71,32 +72,37 @@ $('#signupBtn').click(function () {
     {
         alert("Fields cannot be empty");
     } else {
-        $.ajax({
-            url: '../signup/',
-            type: 'POST',
-            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-            data: {
-                username: $('#username').val(),
-                password: $('#password').val(),
-                csrfmiddlewaretoken: csrftoken
-            },
-            success: function (data) {
-                console.log("Success");
-                window.location.replace('..')
-            },
-            failure: function (data) {
-                console.log(data);
-                document.getElementById('username').style.borderColor = 'red';
-                document.getElementById('password').style.borderColor = 'red';
-            },
-            error: function (jqXHR, textStatus, error) {
-                console.log("Error");
-                if (jqXHR.responseText === "Username already taken") {
+        if (/[a-z]+/.test(document.getElementById('password')) && /[A-Z]+/.test(document.getElementById('password')) && /[0-9]+/.test(document.getElementById('password')) && /[!@_]+/.test(document.getElementById('password')))
+        {
+            $.ajax({
+                url: '../signup/',
+                type: 'POST',
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                data: {
+                    username: $('#username').val(),
+                    password: $('#password').val(),
+                    csrfmiddlewaretoken: csrftoken
+                },
+                success: function (data) {
+                    console.log("Success");
+                    window.location.replace('..')
+                },
+                failure: function (data) {
+                    console.log(data);
                     document.getElementById('username').style.borderColor = 'red';
-                    alert("Username already taken");
+                    document.getElementById('password').style.borderColor = 'red';
+                },
+                error: function (jqXHR, textStatus, error) {
+                    console.log("Error");
+                    if (jqXHR.responseText === "Username already taken") {
+                        document.getElementById('username').style.borderColor = 'red';
+                        alert("Username already taken");
+                    }
                 }
-            }
-        });
+            });
+        } else {
+            document.getElementById('password').style.borderColor = 'red';
+        }
     }
 });
 </script>

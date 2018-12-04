@@ -19,7 +19,7 @@ function switchToEdit() {
 
 function save() {
     let submittable = true;
-    if (name === "" || !/^[a-zA-Z ]+$/.test(name))
+    if (document.getElementById('name').value === "" || !/^[a-zA-Z ]+$/.test(document.getElementById('name').value))
     {
         document.getElementById('name').style.borderColor = 'red';
         submittable = false;
@@ -37,7 +37,7 @@ function save() {
         submittable = false;
     }
 
-    if (document.getElementById('email').value === "")
+    if (document.getElementById('email').value === "" || !/^[a-zA-Z0-9_\-]+@{1}[a-zA-Z0-9_\-]+\.[a-z]+$/.test(document.getElementById('email').value))
     {
         document.getElementById('email').style.borderColor = 'red';
         submittable = false;
