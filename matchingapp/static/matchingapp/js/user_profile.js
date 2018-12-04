@@ -18,35 +18,35 @@ function switchToEdit() {
 }
 
 function save() {
-    let submittable = false;
+    let submittable = true;
     if (name === "" || !/^[a-zA-Z ]+$/.test(name))
     {
         document.getElementById('name').style.borderColor = 'red';
-        submittable = true;
+        submittable = false;
     }
 
-    if ((new Date() - new Date(document.getElementById('dob').value))/(1000*60*60*24*365) < 18 || (new Date() - new Date(document.getElementById('dob').value))/(1000*60*60*24*365) > 120)
+    if (document.getElementById('dob').value === "" ||  (new Date() - new Date(document.getElementById('dob').value))/(1000*60*60*24*365) < 18 || (new Date() - new Date(document.getElementById('dob').value))/(1000*60*60*24*365) > 120)
     {
         document.getElementById('dob').style.borderColor = 'red';
-        submittable = true;
+        submittable = false;
     }
 
     if (document.getElementById('gender').value === "")
     {
         document.getElementById('gender').style.borderColor = 'red';
-        submittable = true;
+        submittable = false;
     }
 
     if (document.getElementById('email').value === "")
     {
         document.getElementById('email').style.borderColor = 'red';
-        submittable = true;
+        submittable = false;
     }
 
-    if ($('[name="hobby"]').length === 0)
+    if (document.querySelectorAll('input[type="checkbox"]:checked').length === 0)
     {
-        document.getElementById('hobbiesDiv').style.borderColor = 'red';
-        submittable = true;
+        document.getElementById('hobbiesDiv').style.border = 'solid red';
+        submittable = false;
     }
 
     if (!submittable){
