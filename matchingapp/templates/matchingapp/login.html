@@ -72,7 +72,7 @@ $('#signupBtn').click(function () {
     {
         alert("Fields cannot be empty");
     } else {
-        if (/[a-z]+/.test(document.getElementById('password')) && /[A-Z]+/.test(document.getElementById('password')) && /[0-9]+/.test(document.getElementById('password')) && /[!@_]+/.test(document.getElementById('password')))
+        if (/[a-z]+/.test(document.getElementById('password').value) && /[A-Z]+/.test(document.getElementById('password').value) && /[0-9]+/.test(document.getElementById('password').value) && /[!@_]+/.test(document.getElementById('password').value))
         {
             $.ajax({
                 url: '../signup/',
@@ -101,6 +101,7 @@ $('#signupBtn').click(function () {
                 }
             });
         } else {
+            console.log("Password does not match requirements");
             document.getElementById('password').style.borderColor = 'red';
         }
     }
