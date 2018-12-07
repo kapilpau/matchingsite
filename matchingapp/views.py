@@ -9,9 +9,10 @@ from datetime import date
 from bcrypt import hashpw
 import json
 
+# Fixed salt for hashing passwords to make sure that the hashing is constant
 salt = b'$2b$12$Jx1Vfxjy0iuMxP0cBeDctu'
 
-# decorator that tests whether user is logged in
+# Decorator to test if user is logged in, and if not to redirect to login
 def loggedin(view):
     def mod_view(request):
         if 'username' in request.session:
@@ -25,6 +26,7 @@ def loggedin(view):
     return mod_view
 
 
+# View to display the index page to the users which displays the list of users
 @loggedin
 def index(request):
     context = getContext(request)
@@ -267,13 +269,13 @@ def getUsers(request):
         print(pfls)
         resp = []
         for pfl in pfls:
-            print(pfl.hobbies.all())
-            hobbies = []
-            for hobby in pfl.hobbies.all():
-                hobbies.append(hobby.name)
-            today = date.today()
-            born = pfl.dob
-            resp.append({'id': pfl.id, 'name': pfl.name, 'hobbies': hobbies, 'gender': pfl.gender, 'age': today.year - born.year - ((today.month, today.day) < (born.month, born.day))})
+            if (Member.objects.get(username=request.session['username']) not in Member.objects.get(profile=pfl).matches.all()) and (Member.objects.get(username=request.session['username']) not in Member.objects.get(profile=pfl).match_requests.all()):
+                hobbies = []
+                for hobby in pfl.hobbies.all():
+                    hobbies.append(hobby.name)
+                today = date.today()
+                born = pfl.dob
+                resp.append({'id': pfl.id, 'name': pfl.name, 'hobbies': hobbies, 'gender': pfl.gender, 'age': today.year - born.year - ((today.month, today.day) < (born.month, born.day))})
         return JsonResponse(resp, safe=False)
 
 
