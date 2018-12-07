@@ -25,7 +25,7 @@ def loggedin(view):
             return render(request, 'matchingapp/login.html', getContext(request))
     return mod_view
 
-# Decorator to test if user is logged in and admin, if not then redirect
+# Decorator to test if user is logged in and admin, if not then redirect to log in or index
 def isadmin(view):
     def mod_view(request):
         if 'username' in request.session:
@@ -46,13 +46,15 @@ def index(request):
     return render(request, 'matchingapp/index.html', context)
 
 
-# View to display the
+# View to display the list of hobbies for the admins to edit
 @isadmin
 def admin(request):
     context = getContext(request)
     return render(request, 'matchingapp/admin.html', context)
 
 
+# View split into get and post, if the method is get, then return the login page, otherwise test if the user exists
+# and the password is correct. If they are then set up the user's session, otherwise return the appropriate error
 def login(request):
     if request.method == 'GET':
         context = getContext(request)
@@ -77,6 +79,8 @@ def login(request):
             return HttpResponseBadRequest('Request must ajax')
 
 
+# View split into get and post, if the method is get, then return the sign up page, otherwise attempt to create the user
+# and their profile, if it can't then through an error
 def signup(request):
     if request.method == 'POST':
         if request.is_ajax():
@@ -117,30 +121,34 @@ def signup(request):
         return render(request, 'matchingapp/signup.html', context)
 
 
+#
 def profile(request, prof=None):
-    pfl = Profile.objects.get(id=prof)
-    print(pfl)
-    mem = Member.objects.get(profile=pfl)
-    user = Member.objects.get(username=request.session['username'])
-    if prof == user.profile.id:
-        return redirect('/profile/')
-    context = getContext(request)
-    hobby_set = Hobby.objects.values_list('name', flat=True)
-    context['hobby_list'] = list(hobby_set)
-    pfl = Profile.objects.get(id=prof)
-    context['profile'] = {'id': pfl.pk, 'profile_image': pfl.profile_image.url, 'name': pfl.name,
-                                  'email': pfl.email, 'gender': pfl.gender, 'dob': str(pfl.dob),
-                                  'hobbies': list(pfl.hobbies.values_list('name', flat=True))}
-    print(context)
-    match_status = 0
-    if mem in user.match_requests.all():
-        match_status = 1
-    elif mem in user.matches.all():
-        match_status = 2
-    elif user in mem.match_requests.all():
-        match_status = 3
-    context['match_status'] = match_status
-    return render(request, 'matchingapp/profile.html', context)
+    try:
+        pfl = Profile.objects.get(id=prof)
+        print(pfl)
+        mem = Member.objects.get(profile=pfl)
+        user = Member.objects.get(username=request.session['username'])
+        if prof == user.profile.id:
+            return redirect('/profile/')
+        context = getContext(request)
+        hobby_set = Hobby.objects.values_list('name', flat=True)
+        context['hobby_list'] = list(hobby_set)
+        pfl = Profile.objects.get(id=prof)
+        context['profile'] = {'id': pfl.pk, 'profile_image': pfl.profile_image.url, 'name': pfl.name,
+                                      'email': pfl.email, 'gender': pfl.gender, 'dob': str(pfl.dob),
+                                      'hobbies': list(pfl.hobbies.values_list('name', flat=True))}
+        print(context)
+        match_status = 0
+        if mem in user.match_requests.all():
+            match_status = 1
+        elif mem in user.matches.all():
+            match_status = 2
+        elif user in mem.match_requests.all():
+            match_status = 3
+        context['match_status'] = match_status
+        return render(request, 'matchingapp/profile.html', context)
+    except KeyError:
+        return redirect('/')
 
 
 @loggedin
