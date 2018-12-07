@@ -25,13 +25,16 @@ def loggedin(view):
             return render(request, 'matchingapp/login.html', getContext(request))
     return mod_view
 
-# Decorator to test if user is logged in and admin
+# Decorator to test if user is logged in and admin, if not then redirect
 def isadmin(view):
     def mod_view(request):
-        if ('username' in request.session) and (request.session['isAdmin'] is True):
-            return view(request)
+        if 'username' in request.session:
+            if request.session['isAdmin'] is True:
+                return view(request)
+            else:
+                return redirect('/')
         else:
-            return redirect('/')
+            return  redirect('/login/')
     return mod_view
 
 
