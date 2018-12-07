@@ -15,7 +15,7 @@
             </tr>
             {% for request in match_requests %}
                 <tr id="req{{ request.id }}">
-                    <td><a href="/profile/{{ match.id }}">{{ request.name }}</a></td><td><i onclick="manageRequest({{ request.id }}, 'accept')" class="material-icons">done</i><i onclick="manageRequest({{ request.id }}, 'reject')" class="material-icons">clear</i></td>
+                    <td><a href="/profile/{{ request.id }}">{{ request.name }}</a></td><td><i onclick="manageRequest({{ request.id }}, 'accept')" class="material-icons">done</i><i onclick="manageRequest({{ request.id }}, 'reject')" class="material-icons">clear</i></td>
                 </tr>
             {% endfor %}
         </table>
