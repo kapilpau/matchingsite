@@ -3,7 +3,7 @@
 {% block head %}
 
     {% load static %}
-
+    <script src="{% static 'matchingapp/js/admin.js' %}"></script>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet">
     <style>
@@ -28,13 +28,4 @@
             <th>Action</th>
         </tr>
     </table>
-{% endblock %}
-
-{% block script %}
-    <script src="{% static 'matchingapp/js/admin.js' %}"></script>
-    <script>
-    if ("{{ isAdmin }}" === "False") {
-        window.location.pathname = '/'
-    }
-    </script>
 {% endblock %}

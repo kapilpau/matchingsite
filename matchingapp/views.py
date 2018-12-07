@@ -25,15 +25,26 @@ def loggedin(view):
             return render(request, 'matchingapp/login.html', getContext(request))
     return mod_view
 
+# Decorator to test if user is logged in and admin
+def isadmin(view):
+    def mod_view(request):
+        if ('username' in request.session) and (request.session['isAdmin'] is True):
+            return view(request)
+        else:
+            return redirect('/')
+    return mod_view
 
-# View to display the index page to the users which displays the list of users
+
+# View to display the index page to the users which displays the list of users which the user hasn't already matched
+# with or requested
 @loggedin
 def index(request):
     context = getContext(request)
     return render(request, 'matchingapp/index.html', context)
 
 
-@loggedin
+# View to display the
+@isadmin
 def admin(request):
     context = getContext(request)
     return render(request, 'matchingapp/admin.html', context)
