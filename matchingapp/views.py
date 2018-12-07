@@ -7,6 +7,7 @@ from django.db.models.functions import Lower, datetime
 import random, os
 from datetime import date
 from bcrypt import hashpw
+import json
 
 salt = b'$2b$12$Jx1Vfxjy0iuMxP0cBeDctu'
 
@@ -64,15 +65,40 @@ def signup(request):
     if request.method == 'POST':
         if request.is_ajax():
             try:
-                print(request.POST['password'])
-                mem = Member(username=request.POST['username'], password=hashpw(request.POST['password'].encode('utf-8'), salt).decode("utf-8"))
+                req_dets = dict(request.POST.lists())
+                mem = Member(username=req_dets['username'][0], password=hashpw(req_dets['password'][0].encode('utf-8'), salt).decode("utf-8"))
+                try:
+                    mem.save()
+                except IntegrityError:
+                    return HttpResponseBadRequest('Username already taken')
+                hobbies = []
+                checkedHobbies = req_dets['profile[checkedHobbies][]']
+                for hobby in checkedHobbies:
+                    hobbies.append(Hobby.objects.get(name=hobby))
+                prof = Profile.objects.create(profile_image='profile_images/silhouette.png', name=req_dets['profile[name]'][0], email=req_dets['profile[email]'][0], dob=datetime.datetime.strptime(req_dets['profile[dob]'][0], "%Y-%m-%d").date(), gender=req_dets['profile[gender]'][0])
+                # prof.save()
+                prof.hobbies.set(hobbies)
+                prof.save()
+                mem.profile = prof
                 mem.save()
+                request.session['profile'] = {'id': prof.pk, 'profile_image': prof.profile_image.url, 'name': prof.name, 'email': prof.email, 'gender': prof.gender, 'dob': str(prof.dob), 'hobbies': serializers.serialize('json', prof.hobbies.all())}
+                print(request.session['profile'])
+                print(mem.profile.hobbies.all())
+                for key, value in request.session.items():
+                    print('{} => {}'.format(key, value))
                 request.session['username'] = request.POST['username']
                 request.session['isAdmin'] = mem.isAdmin
-                request.session['profile'] = {}
                 return HttpResponse()
-            except IntegrityError:
-                return HttpResponseBadRequest('Username already taken')
+            except:
+                return HttpResponseBadRequest('Something went wrong')
+
+    else:
+        if 'username' in request.session:
+            return redirect('/')
+        context = getContext(request)
+        hobby_set = Hobby.objects.values_list('name', flat=True)
+        context['hobby_list'] = list(hobby_set)
+        return render(request, 'matchingapp/signup.html', context)
 
 
 def profile(request, prof=None):
@@ -106,6 +132,7 @@ def userProfile(request):
     context = getContext(request)
     hobby_set = Hobby.objects.values_list('name', flat=True)
     context['hobby_list'] = list(hobby_set)
+    print(context)
     return render(request, 'matchingapp/user_profile.html', context)
 
 
@@ -197,7 +224,6 @@ def updateProfile(request):
         pfl.dob = datetime.datetime.strptime(request_dets['dob'], "%Y-%m-%d").date()
         pfl.gender = request_dets['gender']
     pfl.hobbies.set(hobbies)
-    pfl.hobbies.set(hobbies)
     pfl.save()
     request.session['profile'] = {'id': pfl.pk, 'profile_image': pfl.profile_image.url, 'name': pfl.name,
                                   'email': pfl.email, 'gender': pfl.gender, 'dob': str(pfl.dob),
@@ -215,7 +241,7 @@ def uploadNewProfileImage(request):
             random.randint(10000, 100000000000)) + '.png'
         while filename in os.listdir(os.getcwd() + '/media/profile_images'):
             filename = str(random.randint(10000, 100000000000)) + '_' + str(
-                random.randint(10000, 100000000000)) + _ + str(
+                random.randint(10000, 100000000000)) + '_' + str(
                 random.randint(10000, 100000000000)) + '.png'
         print(filename)
         new_img.name = filename

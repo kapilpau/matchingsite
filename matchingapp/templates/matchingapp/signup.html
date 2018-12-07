@@ -1,0 +1,55 @@
+{% extends "matchingapp/base.html" %}
+
+{% load static %}
+
+{% block head %}
+<script src="{% static 'matchingapp/js/signup.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+    <div id="profileDiv">
+        <br />
+        <label class="profileLabel" for="username">Username:</label><br/>
+        <input id="username" type="text" placeholder="Username"/>
+        <br /><br/>
+        <label class="profileLabel" for="password">Password:</label><br/>
+        <input id="password" type="password" placeholder="Password"/>
+        <br /><br/>
+        <label class="profileLabel" for="confirmPassword">Confirm Password:</label><br/>
+        <input id="confirmPassword" type="password" placeholder="Password"/>
+        <br /><br/>
+        <label class="profileLabel" for="name">Name:</label><br/>
+        <input id="name" type="text" placeholder="Name"/>
+        <br /><br/>
+        <label class="profileLabel" for="dob">Date of Birth:</label><br/>
+        <input id="dob" type="date"/>
+        <br /><br/>
+        <label class="profileLabel" for="email">Email:</label><br/>
+        <input id="email" placeholder="Email" type="email"/>
+        <br /><br/>
+        <label class="profileLabel" for="gender">Gender:</label><br/>
+        <select id='gender'>
+            <option disabled selected value>Gender</option>
+            <option id='Male'>Male</option>
+            <option id='Female'>Female</option>
+            <option id='Other'>Other</option>
+        </select>
+        <br /><br/>
+        <label class="profileLabel" for="hobbies">Hobbies:</label><br/>
+        <br /><br/>
+        <div id="hobbiesDiv">
+            {% for hobby in hobby_list %}
+                <label for="{{ hobby }}" id="{{ hobby }}-label">{{ hobby }}</label>
+               <input type="checkbox" name="hobby" value="{{ hobby }}" id="{{ hobby }}">
+                <br id="{{ hobby }}-br"/>
+            {% endfor %}
+        </div>
+    </div>
+    <div align="center">
+        <button id="signUpBtn" onclick="signUp()">Sign Up</button>
+        <p id="errorMsg" style="color: red"></p>
+    </div>
+{% endblock %}
+
+{% block script %}
+{% endblock %}

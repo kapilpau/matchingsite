@@ -26,12 +26,13 @@
 <body>
     <div align="center" class="header">
       <a href="/" class="logo">{{ siteName }}</a><br/><br/><br/>
+    {% if profile|length > 0 %}
       <a id="homeBtn" href="/">Home</a>&nbsp&nbsp&nbsp&nbsp
         <a id="profileBtn" href="/profile">Profile</a>&nbsp&nbsp&nbsp&nbsp
         <a id="matchesBtn" href="/matches">Matches</a>&nbsp&nbsp&nbsp&nbsp
         <a id="messagesBtn" href="/messages">Messages</a>&nbsp&nbsp&nbsp&nbsp
         <a id="signOutBtn" href="/signout">Sign Out</a>
-
+    {% endif %}
 	<br>
     </div>
 	{% block content %}
@@ -41,9 +42,9 @@
 <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
 <script>
     $("#chatHistory").scrollTop($("#chatHistory").height());
-    if ("{{ username }}" === "" && window.location.pathname !== '/login' && window.location.pathname !== '/login/') {
+    if ("{{ username }}" === "" && window.location.pathname !== '/login' && window.location.pathname !== '/signup' && window.location.pathname !== '/signup/' && window.location.pathname !== '/login/') {
         window.location.pathname = '/login/';
-    } else if ("{{ username }}" !== "" && (window.location.pathname === '/login' || window.location.pathname === '/login/')) {
+    } else if ("{{ username }}" !== "" && (window.location.pathname === '/login' || window.location.pathname === '/login/' ||  window.location.pathname === '/signup')) {
         window.location.pathname = '/';
     }
 </script>

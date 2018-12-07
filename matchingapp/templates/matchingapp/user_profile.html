@@ -1,4 +1,4 @@
-{% extends "matchingapp/profile.html" %}
+{% extends "matchingapp/base.html" %}
 
 {% load static %}
 
@@ -18,7 +18,8 @@
             </label>
             </div>
         {% endif %}
-        <br />
+        {% block accountInfo %}
+        {% endblock %}
         <label class="profileLabel" for="name">Name:</label><br/>
         <span id="name">{{ profile.name }}</span>
         <br /><br/>
@@ -44,6 +45,8 @@
     <div align="center">
         <button id="editBtn" onclick="switchToEdit()">Edit</button>
         <button id="saveBtn" onclick="save()">Save</button>
+        {% block btnBlock %}
+        {% endblock %}
         <p id="errorMsg" style="color: red"></p>
     </div>
 {% endblock %}
@@ -55,20 +58,14 @@
         $("[id*='br']").hide();
         $('#saveBtn').hide();
         $('#requestMatch').hide();
-        if (JSON.stringify({{ profile|safe }}) === "{}")
-        {
-            profile = {};
-            switchToEdit();
-        } else {
-            profile = {{ profile|safe }};
-            profile_img = "{{ profile.profile_image.url }}";
-            hobbies = JSON.parse(profile.hobbies);
-            hobbies.forEach(function (hobby) {
-                $('#' + hobby.fields.name + "-label").show();
-                $('#' + hobby.fields.name + "-br").show();
-                $('#' + hobby.fields.name).prop('checked', true);
-            });
-        }
+        profile = {{ profile|safe }};
+        profile_img = "{{ profile.profile_image.url }}";
+        hobbies = JSON.parse(profile.hobbies);
+        hobbies.forEach(function (hobby) {
+            $('#' + hobby.fields.name + "-label").show();
+            $('#' + hobby.fields.name + "-br").show();
+            $('#' + hobby.fields.name).prop('checked', true);
+        });
     </script>
 
 {% endblock %}
