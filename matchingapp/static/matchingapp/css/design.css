@@ -1,80 +1,6 @@
-body {
-    background-color: #b3e5fc !important;
-}
+/* This static CSS is an addition to already implemented Bootstrap code to modify the design */
 
-.main {
-    margin: 0 auto;
-    width: 30%;
-}
-
-#profileBtns{
-    width: 20%;
-    margin: 0 auto;
-}
-
-#profileDiv {
-    text-align: center;
-    width: 20%;
-    margin: 0 auto;
-    clear: both;
-    font-family: Arial;
-}
-
-.profileLabel {
-    background-color: #263238;
-    font-weight: bold;
-    text-transform: uppercase;
-    padding: 2px;
-    color: white;
-    display: inline-block;
-    width: 200px;
-}
-
-.loginLabel {
-    font-family: Arial;
-    font-weight: bold;
-    text-transform: uppercase;
-    padding: 2px;
-    display: inline-block;
-    width: 100px;
-}
-
-#usersDiv {
-    margin: 0 auto;
-}
-
-#usersTable{
-    width: 30%;
-    font-family: Arial;
-}
-
-#usersTopRow {
-    background-color: #263238;
-    font-weight: bold;
-    font-size: 16px;
-    color: white;
-}
-
-#filterTable, label {
-    font-family: Arial;
-}
-
-#homeBtn, #profileBtn, #signOutBtn, #matchesBtn, #messagesBtn {
-    font-size: 16px;
-    text-transform: uppercase;
-    text-decoration: none;
-    font-family: Arial;
-    color: white;
-}
-
-#signUpLink {
-    font-size: 11px;
-    text-transform: uppercase;
-    text-decoration: none;
-    font-family: Arial;
-    color: blue;
-}
-
+/* Header design */
 .header {
     overflow: hidden;
     background-color: #263238;
@@ -125,6 +51,106 @@ body {
     }
 }
 
+/* Header buttons design */
+.profileLabel {
+    background-color: #263238;
+    font-weight: bold;
+    text-transform: uppercase;
+    padding: 2px;
+    color: white;
+    display: inline-block;
+    width: 200px;
+}
+
+/* Body bg color */
+body {
+    background-color: #b3e5fc !important;
+}
+
+.main {
+    margin: 0 auto;
+    width: 30%;
+}
+
+/* Buttons design */
+button, input[type=button] {
+    background-color: #2196f3;
+    border: none;
+    color: white !important;
+    padding: 7px 15px !important;
+    text-align: center;
+    text-decoration: none !important;
+    display: inline-block !important;
+    font-size: 16px !important;
+    margin: 4px 2px !important;
+    margin-top: 20px !important;
+    cursor: pointer !important;
+}
+
+#homeBtn, #profileBtn, #signOutBtn, #matchesBtn, #messagesBtn {
+    font-size: 16px;
+    text-transform: uppercase;
+    text-decoration: none;
+    font-family: Arial;
+    color: white;
+}
+
+#profileBtns{
+    width: 20%;
+    margin: 0 auto;
+}
+
+/* Various divs design */
+#profileDiv {
+    text-align: center;
+    width: 20%;
+    margin: 0 auto;
+    clear: both;
+    font-family: Arial;
+}
+
+#usersDiv {
+    margin: 0 auto;
+}
+
+/* Login labels design */
+.loginLabel {
+    font-family: Arial;
+    font-weight: bold;
+    text-transform: uppercase;
+    padding: 2px;
+    display: inline-block;
+    width: 100px;
+}
+
+/* Sign up link design */
+#signUpLink {
+    font-size: 11px;
+    text-transform: uppercase;
+    text-decoration: none;
+    font-family: Arial;
+    color: blue;
+}
+
+/* Users displayed data design */
+#usersTable{
+    width: 30%;
+    font-family: Arial;
+}
+
+#usersTopRow {
+    background-color: #263238;
+    font-weight: bold;
+    font-size: 16px;
+    color: white;
+}
+
+/* Label and table font family */
+#filterTable, label {
+    font-family: Arial;
+}
+
+/* Filter slider design */
 .ui-slider .ui-slider-range {
     -webkit-appearance: none;
     height: 25px !important;
@@ -152,6 +178,7 @@ body {
     cursor: pointer;
 }
 
+/* Header text design */
 h1 {
     text-align: center;
     text-shadow: 1px 1px grey;
@@ -162,20 +189,7 @@ h2 {
     font-family: Arial;
 }
 
-button, input[type=button] {
-    background-color: #2196f3;
-    border: none;
-    color: white !important;
-    padding: 7px 15px !important;
-    text-align: center;
-    text-decoration: none !important;
-    display: inline-block !important;
-    font-size: 16px !important;
-    margin: 4px 2px !important;
-    margin-top: 20px !important;
-    cursor: pointer !important;
-}
-
+/* Profile image button design */
 #imageFile {
     padding: 10px !important;
     background: #2196f3 !important;
@@ -183,6 +197,7 @@ button, input[type=button] {
     color: #fff !important;
 }
 
+/* Input fields design */
 input[type="file"] {
     display: none;
 }
@@ -208,6 +223,8 @@ input[type=checkbox].css-checkbox + label.css-label {
 input[type=checkbox].css-checkbox:checked + label.css-label {
     background-position: 0 -30px;
 }
+
+/* Big checkboxes for filter menu */
 label.css-label {
     background-image:url(http://csscheckbox.com/checkboxes/u/csscheckbox_f60067e68146be412873f96f1d2458cd.png);
     -webkit-touch-callout: none;
