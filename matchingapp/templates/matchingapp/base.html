@@ -25,6 +25,23 @@
     </style>
 </head>
 <body>
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a href="/" class="navbar-brand">{{ siteName }}</a>
+            </div>
+            <div class="collapse navbar-collapse" id="myNavbar">
+                <ul class="nav navbar-nav">
+                    <li><a href="/profile">Profile</a></li>
+                    <li><a href="/matches">Matches</a></li>
+                    <li><a href="/messages">Messages</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="/signout"><span class="glyphicon glyphicon-log-in"></span> Sign Out</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
     <div align="center" class="header">
       <a href="/" class="logo">{{ siteName }}</a><br/><br/><br/>
     {% if profile|length > 0 %}
@@ -39,7 +56,6 @@
 	{% block content %}
 	{% endblock %}
 </body>
-
 <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
 <script>
     $("#chatHistory").scrollTop($("#chatHistory").height());
