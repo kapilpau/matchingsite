@@ -11,7 +11,7 @@ function switchToEdit() {
     if (JSON.stringify(profile) !== "{}")
     {
         document.getElementById('name').value = profile.name;
-        document.getElementById('dob').value = profile.dob;
+        document.getElementById('dob').value = profile.dobdate;
         document.getElementById('email').value = profile.email;
         document.getElementById('gender').value = profile.gender;
     }

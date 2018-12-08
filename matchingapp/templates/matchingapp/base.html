@@ -41,7 +41,8 @@
 
 <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
 <script>
-    $("#chatHistory").scrollTop($("#chatHistory").height());
+    // If the user isn't logged in or signed up and tries to access any other page, then it redirects them to the login page
+    // If they are logged in and try to access the login or sign up pages, then it redirects them to the index page
     if ("{{ username }}" === "" && window.location.pathname !== '/login' && window.location.pathname !== '/signup' && window.location.pathname !== '/signup/' && window.location.pathname !== '/login/') {
         window.location.pathname = '/login/';
     } else if ("{{ username }}" !== "" && (window.location.pathname === '/login' || window.location.pathname === '/login/' ||  window.location.pathname === '/signup')) {

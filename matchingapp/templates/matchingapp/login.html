@@ -14,7 +14,7 @@
             <label class="loginLabel" for="password">Password: </label>
             <br/>
             <input type="password" id="password" placeholder="Password"/><br />
-            <input type="button" name="Log In" value="Log In" id="loginBtn"/><br />
+            <input type="button" name="Log In" value="Log In" id="loginBtn" onclick="login()"/><br />
             <a href="/signup">Click here to create an account</a>
         </table>
     </div>
@@ -29,10 +29,12 @@
     then it redirects to the index page, if not, then it highlights the fields in red to indicate that they are wrong
     */
     const csrftoken = Cookies.get('csrftoken');
-    $('#loginBtn').click(function () {
+
+    function login(){
         if (!document.getElementById('username').value || !document.getElementById('password').value)
         {
-            alert("Fields cannot be empty");
+            document.getElementById('username').style.borderColor = 'red';
+            document.getElementById('password').style.borderColor = 'red';
         } else {
             $.ajax({
                 url: '',
@@ -59,8 +61,17 @@
                 }
             });
         }
-    });
+    }
 
+    // Adds listener for enter key press, when it is pressed, the log in function is called
+    $(function(){
+        $("input").keyup(function(e){
+            if (e.keyCode === 13)
+            {
+                login();
+            }
+        });
+    });
 </script>
 
 {% endblock %}
