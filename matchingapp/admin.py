@@ -4,6 +4,7 @@ from django.contrib.admin import ModelAdmin
 from .models import Hobby, Member, Profile
 from django.contrib.sessions.models import Session
 
+# Binds the user models to the admin page
 admin.site.register(Hobby)
 admin.site.register(Member)
 admin.site.register(Profile)

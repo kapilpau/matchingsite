@@ -1,7 +1,8 @@
+from django.conf.urls import url
 from django.urls import path
-
+import django.views.static
 from matchingapp import views
-
+from matchingsite import settings
 
 urlpatterns = [
     # main page
@@ -25,5 +26,7 @@ urlpatterns = [
     path('cancelRequest/', views.cancelRequest, name='matches'),
     path('messages/', views.messages, name='matches'),
     path('messages/<int:id>/', views.conversation, name='matches'),
-    path('findConvo/<int:id>/', views.convoRedirect, name='convoRedirect')
+    path('findConvo/<int:id>/', views.convoRedirect, name='convoRedirect'),
+    path('static/<str:appname>/<str:foldername>/<str:filename>', views.static, name='static')
+
 ]

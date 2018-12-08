@@ -53,14 +53,15 @@
 
 {% block script %}
     <script>
+        // On loading, the objects which are required for editing a profile are hidden, and the user's hobbies are shown
         $('[name="hobby"]').hide();
         $("[id*='label']").hide();
         $("[id*='br']").hide();
         $('#saveBtn').hide();
         $('#requestMatch').hide();
-        profile = {{ profile|safe }};
-        profile_img = "{{ profile.profile_image.url }}";
-        hobbies = JSON.parse(profile.hobbies);
+        const profile = {{ profile|safe }} || {};
+        let profile_img = "{{ profile.profile_image.url }}";
+        let hobbies = JSON.parse(profile.hobbies);
         hobbies.forEach(function (hobby) {
             $('#' + hobby.fields.name + "-label").show();
             $('#' + hobby.fields.name + "-br").show();
