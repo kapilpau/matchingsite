@@ -69,7 +69,7 @@ def login(request):
                 request.session['isAdmin'] = mem.isAdmin
                 try:
                     pfl = mem.profile
-                    request.session['profile'] = {'id': pfl.pk, 'profile_image': pfl.profile_image.url, 'name': pfl.name, 'email': pfl.email, 'gender': pfl.gender, 'dob': str(pfl.dob), 'hobbies': serializers.serialize('json', pfl.hobbies.all())}
+                    request.session['profile'] = {'id': pfl.pk, 'profile_image': pfl.profile_image.url, 'name': pfl.name, 'email': pfl.email, 'gender': pfl.gender, 'dob': pfl.dob.strftime('%-d %B %Y'), 'hobbies': serializers.serialize('json', pfl.hobbies.all())}
                 except:
                     request.session['profile'] = {}
                 return HttpResponse()
@@ -101,7 +101,7 @@ def signup(request):
                 prof.save()
                 mem.profile = prof
                 mem.save()
-                request.session['profile'] = {'id': prof.pk, 'profile_image': prof.profile_image.url, 'name': prof.name, 'email': prof.email, 'gender': prof.gender, 'dob': str(prof.dob), 'hobbies': serializers.serialize('json', prof.hobbies.all())}
+                request.session['profile'] = {'id': prof.pk, 'profile_image': prof.profile_image.url, 'name': prof.name, 'email': prof.email, 'gender': prof.gender, 'dob': pfl.dob.strftime('%-d %B %Y'), 'hobbies': serializers.serialize('json', prof.hobbies.all())}
                 print(request.session['profile'])
                 print(mem.profile.hobbies.all())
                 for key, value in request.session.items():
@@ -137,7 +137,7 @@ def profile(request, prof=None):
         context['hobby_list'] = list(hobby_set)
         pfl = Profile.objects.get(id=prof)
         context['profile'] = {'id': pfl.pk, 'profile_image': pfl.profile_image.url, 'name': pfl.name,
-                                      'email': pfl.email, 'gender': pfl.gender, 'dob': str(pfl.dob),
+                                      'email': pfl.email, 'gender': pfl.gender, 'dob': pfl.dob.strftime('%-d %B %Y'),
                                       'hobbies': list(pfl.hobbies.values_list('name', flat=True))}
         print(context)
         match_status = 0
@@ -260,7 +260,7 @@ def updateProfile(request):
     pfl.hobbies.set(hobbies)
     pfl.save()
     request.session['profile'] = {'id': pfl.pk, 'profile_image': pfl.profile_image.url, 'name': pfl.name,
-                                  'email': pfl.email, 'gender': pfl.gender, 'dob': str(pfl.dob),
+                                  'email': pfl.email, 'gender': pfl.gender, 'dob': pfl.dob.strftime('%-d %B %Y'),
                                   'hobbies': serializers.serialize('json', pfl.hobbies.all())}
     return HttpResponse()
 
@@ -285,9 +285,7 @@ def uploadNewProfileImage(request):
             pfl = Member.objects.get(username=request.session['username']).profile
             pfl.profile_image = new_img
             pfl.save()
-            request.session['profile'] = {'id': pfl.pk, 'profile_image': pfl.profile_image.url, 'name': pfl.name,
-                                          'email': pfl.email, 'gender': pfl.gender, 'dob': str(pfl.dob),
-                                          'hobbies': serializers.serialize('json', pfl.hobbies.all())}
+            request.session['profile']['profile_image'] = pfl.profile_image.url
             return JsonResponse({'url': '/media/profile_images/' + filename})
         except:
             return HttpResponseServerError()
