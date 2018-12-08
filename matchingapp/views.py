@@ -1,6 +1,6 @@
 from django.db import IntegrityError
 from django.shortcuts import render, redirect
-from django.http import HttpResponse, QueryDict, HttpResponseBadRequest, JsonResponse, HttpResponseServerError
+from django.http import HttpResponse, QueryDict, HttpResponseBadRequest, JsonResponse, HttpResponseServerError, FileResponse
 from .models import Member, Hobby, Profile, Conversation, Message
 from django.core import serializers
 from django.db.models.functions import Lower, datetime
@@ -121,7 +121,9 @@ def signup(request):
         return render(request, 'matchingapp/signup.html', context)
 
 
-#
+# Attempts to display the profile of the user specified in the url
+# Intermittent error meaning that the whole view is surrounded in a try catch which redirects to the index
+# Cause unknown, occurs seemingly randomly and unable to replicate
 def profile(request, prof=None):
     try:
         pfl = Profile.objects.get(id=prof)
@@ -151,6 +153,7 @@ def profile(request, prof=None):
         return redirect('/')
 
 
+# Displays the user's own profile, through this page, they can update their profile
 @loggedin
 def userProfile(request):
     context = getContext(request)
@@ -160,6 +163,7 @@ def userProfile(request):
     return render(request, 'matchingapp/user_profile.html', context)
 
 
+# API endpoint to return the list of possible hobbies
 def getHobbies(request):
     if request.is_ajax():
         if request.method == 'GET':
@@ -169,6 +173,8 @@ def getHobbies(request):
         return HttpResponseBadRequest("Request must be ajax")
 
 
+# API endpoint to add a new hobby, can only best called if the user is an admin
+@isadmin
 def addHobby(request):
     if request.is_ajax():
         if request.method == 'POST':
@@ -182,6 +188,8 @@ def addHobby(request):
         return HttpResponseBadRequest("Request must be ajax")
 
 
+# API endpoint to delete a hobby, can only best called if the user is an admin
+@isadmin
 def deleteHobby(request):
     if request.is_ajax():
         if request.method == 'DELETE':
@@ -193,6 +201,7 @@ def deleteHobby(request):
         return HttpResponseBadRequest("Request must be ajax")
 
 
+# Function to return the context which should be pages to the templates when they are rendered
 def getContext(request):
     try:
         user = request.session['username']
@@ -229,6 +238,7 @@ def getContext(request):
     return context
 
 
+# API endpoint for a user to update their profile
 @loggedin
 def updateProfile(request):
     request_dets = QueryDict(request.body)
@@ -255,6 +265,8 @@ def updateProfile(request):
     return HttpResponse()
 
 
+# API endpoint to allow the user to upload a new profile picture. The view stores the file with a random name and then
+# stores the file name in their profile record in the database
 @loggedin
 def uploadNewProfileImage(request):
     if 'new_img' in request.FILES:
@@ -284,6 +296,7 @@ def uploadNewProfileImage(request):
         return HttpResponseBadRequest('Image file required')
 
 
+# API end point for the index page. It returns the list of users which the user hasn't already requested or matched with
 @loggedin
 def getUsers(request):
     if request.method == 'GET' and request.is_ajax():
@@ -301,11 +314,13 @@ def getUsers(request):
         return JsonResponse(resp, safe=False)
 
 
+# Signs the user out by flushing the session and redirects them to the login page
 def signout(request):
     request.session.flush()
     return redirect('/login/')
 
 
+# API to request to match with the user specified in the request
 @loggedin
 def requestMatch(request):
     prof = Profile.objects.get(id=request.POST['id'])
@@ -326,6 +341,7 @@ def requestMatch(request):
     return HttpResponse()
 
 
+# View which displays the user's match requests and matches
 @loggedin
 def matches(request):
     context = getContext(request)
@@ -333,6 +349,7 @@ def matches(request):
     return render(request, 'matchingapp/matches.html', context)
 
 
+# API endpoint to allow the user to accept or reject a match request
 @loggedin
 def manageRequest(request):
     if request.method == 'POST':
@@ -358,6 +375,7 @@ def manageRequest(request):
         return HttpResponseBadRequest()
 
 
+# API endpoint to allow the user to delete a match
 @loggedin
 def deleteMatch(request):
     if request.method == 'POST':
@@ -378,6 +396,7 @@ def deleteMatch(request):
         return HttpResponseBadRequest()
 
 
+# View which displays the user's conversations
 @loggedin
 def messages(request):
     convos = Conversation.objects.all()
@@ -398,6 +417,7 @@ def messages(request):
     return render(request, 'matchingapp/messages.html', context)
 
 
+# A redirecting view to allow the user to go to their conversation with another user from the matches page or the user's profile
 def convoRedirect(request, id):
     prof = Member.objects.get(profile=Profile.objects.get(id=id))
     user = Member.objects.get(username=request.session['username'])
@@ -416,6 +436,7 @@ def convoRedirect(request, id):
     return redirect('/messages/' + str(convo.id))
 
 
+# A view to which contains the user's conversation
 def conversation(request, id):
     context = getContext(request)
     try:
@@ -435,6 +456,7 @@ def conversation(request, id):
     return render(request, 'matchingapp/conversation.html', context)
 
 
+# API endpoint to allow the user to cancel a match request with a user
 @loggedin
 def cancelRequest(request):
     if request.method == 'POST':
@@ -449,3 +471,17 @@ def cancelRequest(request):
             return HttpResponseBadRequest(user.profile.name + " hasn't requested to match with " + prof.name)
     else:
         return HttpResponseBadRequest('Request must be post')
+
+
+def static(request, appname, foldername, filename):
+    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    file_name = os.path.join(BASE_DIR, "matchingapp/static") + "/" + appname + "/" + foldername + "/" + filename
+    print(file_name)
+    if os.path.exists(file_name):
+        try:
+            file = open(file_name, 'rb')
+        except:
+            print("Foo")
+    else:
+        print("Doesn't exist bro")
+    return FileResponse(file)

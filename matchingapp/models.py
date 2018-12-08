@@ -2,10 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from datetime import datetime
 
-# Hobby model has a name field and an optional description
-# field and has a Many-To-Many field with Profile
-
-
+# Hobby model has a name field
 class Hobby(models.Model):
     name = models.TextField(max_length=200)
 
@@ -13,11 +10,9 @@ class Hobby(models.Model):
         return self.name
 
 
-# Profile model has a number of fields and there is
-# a OneToOne relationship between Member and Profile
-# where a Member might not have a Profile
-
-
+# Profile model has a number of fields
+# and there is a OneToOne relationship between Member and Profile where a Member might not have a Profile.
+# There is a ManyToMany relationship with Hobby.
 class Profile(models.Model):
     profile_image = models.ImageField(upload_to='profile_images')
     name = models.TextField(max_length=40)
@@ -36,9 +31,8 @@ class Profile(models.Model):
 
 # Django's User model already has username and password
 # both of which are required fields, so Member inherits
-# these fields
-
-
+# these fields. It has ManyToMany relationships with itself
+# representing matches and match requests
 class Member(User):
     isAdmin = models.BooleanField(default=False)
     profile = models.OneToOneField(
@@ -59,6 +53,8 @@ class Member(User):
     )
 
 
+# Conversation model has a name and a ManyToMany relationship with
+# Member representing the participants of the conversation
 class Conversation(models.Model):
     name = models.CharField(max_length=100, null=False, blank=False)
     participants = models.ManyToManyField(
@@ -68,6 +64,10 @@ class Conversation(models.Model):
     )
 
 
+# Message model has ForeignKey relationships with Conversation and Member
+# representing the conversation the message is in and the user who sent it.
+# It also has a ManyToMany relationship with Member representation the users
+# who have read the message
 class Message(models.Model):
     conversation = models.ForeignKey(Conversation, on_delete=models.CASCADE)
     sender = models.ForeignKey(Member, on_delete=models.SET_NULL, null=True)

@@ -46,16 +46,16 @@
         document.getElementById("Male_chckbox").checked = true;
         document.getElementById("Female_chckbox").checked = true;
         document.getElementById("Other_chckbox").checked = true;
-        var profiles;
-        var csrftoken = Cookies.get('csrftoken');
-        var slider =  $("#slider-range");
-        var age_range = $("#age_range");
+        let profiles;
+        const csrftoken = Cookies.get('csrftoken');
+        let slider =  $("#slider-range");
+        let age_range = $("#age_range");
         if ("{{ profile }}" === "{}")
         {
             window.location.pathname = '/profile/'
         }
-        var profile = {{ profile|safe }};
-        var hobbies = JSON.parse(profile.hobbies);
+        let profile = {{ profile|safe }};
+        let hobbies = JSON.parse(profile.hobbies);
         $.ajax({
             url: '/getUsers',
             type: 'GET',
@@ -64,20 +64,20 @@
             },
             success: function (data) {
                 profiles = data;
-                var hobbies = JSON.parse(profile.hobbies);
+                let hobbies = JSON.parse(profile.hobbies);
                 console.log(data);
                 data.sort(function(a, b){
                     a = a.hobbies;
                     b = b.hobbies;
-                    var aCom = 0;
-                    var bCom = 0;
-                    for (var i = 0; i < a.length; i++)
+                    let aCom = 0;
+                    let bCom = 0;
+                    for (let i = 0; i < a.length; i++)
                     {
                         if (hobbies.indexOf(a[i])){
                             aCom++;
                         }
                     }
-                    for (var i = 0; i < b.length; i++)
+                    for (let i = 0; i < b.length; i++)
                     {
                         if (hobbies.indexOf(b[i])){
                             bCom++;
@@ -86,7 +86,7 @@
                     return bCom - aCom
                 });
                 console.log(data);
-                for (var i = 0; i<data.length; i++){
+                for (let i = 0; i<data.length; i++){
                     document.getElementById('usersTable').innerHTML += "<tr id='pfl"+data[i].id+"'><td><a href=\"/profile/"+data[i].id+"\">" + data[i].name + "</a></td><td>" + data[i].hobbies.toString() + "</td></tr>"
 
                 }
