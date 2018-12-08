@@ -476,7 +476,32 @@ def cancelRequest(request):
 def static(request, appname, foldername, filename):
     BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     file_name = os.path.join(BASE_DIR, "matchingapp/static") + "/" + appname + "/" + foldername + "/" + filename
-    print(file_name)
+    if os.path.exists(file_name):
+        try:
+            file = open(file_name, 'rb')
+        except:
+            print("Foo")
+    else:
+        print("Doesn't exist bro")
+    return FileResponse(file)
+
+
+def media(request, foldername, filename):
+    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    file_name = os.path.join(BASE_DIR, "media") + "/" + foldername + "/" + filename
+    if os.path.exists(file_name):
+        try:
+            file = open(file_name, 'rb')
+        except:
+            print("Foo")
+    else:
+        print("Doesn't exist bro")
+    return FileResponse(file)
+
+
+def favicon(request):
+    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    file_name = os.path.join(BASE_DIR, "media/favicon.ico")
     if os.path.exists(file_name):
         try:
             file = open(file_name, 'rb')
