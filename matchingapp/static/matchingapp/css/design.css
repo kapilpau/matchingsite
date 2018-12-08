@@ -67,6 +67,14 @@ body {
     color: white;
 }
 
+#signUpLink {
+    font-size: 11px;
+    text-transform: uppercase;
+    text-decoration: none;
+    font-family: Arial;
+    color: blue;
+}
+
 .header {
     overflow: hidden;
     background-color: #263238;
@@ -154,7 +162,7 @@ h2 {
     font-family: Arial;
 }
 
-button {
+button, input[type=button] {
     background-color: #2196f3;
     border: none;
     color: white;
