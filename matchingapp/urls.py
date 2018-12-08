@@ -27,6 +27,7 @@ urlpatterns = [
     path('messages/', views.messages, name='matches'),
     path('messages/<int:id>/', views.conversation, name='matches'),
     path('findConvo/<int:id>/', views.convoRedirect, name='convoRedirect'),
-    path('static/<str:appname>/<str:foldername>/<str:filename>', views.static, name='static')
-
+    path('static/<str:appname>/<str:foldername>/<str:filename>', views.static, name='static'),
+    path('media/<str:foldername>/<str:filename>', views.media, name='media'),
+    path('media/favicon.ico', views.favicon, name='favicon')
 ]
