@@ -1,3 +1,12 @@
+$(function(){ // this will be called when the DOM is ready
+    $("input").keyup(function(e){
+        if (e.keyCode === 13)
+        {
+            signUp();
+        }
+    });
+});
+
 function signUp() {
     let submittable = true;
     document.getElementById('errorMsg').innerHTML = "";

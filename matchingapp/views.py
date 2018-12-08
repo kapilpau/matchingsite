@@ -69,7 +69,7 @@ def login(request):
                 request.session['isAdmin'] = mem.isAdmin
                 try:
                     pfl = mem.profile
-                    request.session['profile'] = {'id': pfl.pk, 'profile_image': pfl.profile_image.url, 'name': pfl.name, 'email': pfl.email, 'gender': pfl.gender, 'dob': pfl.dob.strftime('%-d %B %Y'), 'hobbies': serializers.serialize('json', pfl.hobbies.all())}
+                    request.session['profile'] = {'id': pfl.pk, 'profile_image': pfl.profile_image.url, 'name': pfl.name, 'email': pfl.email, 'gender': pfl.gender, 'dob': pfl.dob.strftime('%-d %B %Y'), 'dobdate': str(pfl.dob), 'hobbies': serializers.serialize('json', pfl.hobbies.all())}
                 except:
                     request.session['profile'] = {}
                 return HttpResponse()
@@ -101,7 +101,7 @@ def signup(request):
                 prof.save()
                 mem.profile = prof
                 mem.save()
-                request.session['profile'] = {'id': prof.pk, 'profile_image': prof.profile_image.url, 'name': prof.name, 'email': prof.email, 'gender': prof.gender, 'dob': pfl.dob.strftime('%-d %B %Y'), 'hobbies': serializers.serialize('json', prof.hobbies.all())}
+                request.session['profile'] = {'id': prof.pk, 'profile_image': prof.profile_image.url, 'name': prof.name, 'email': prof.email, 'gender': prof.gender, 'dob': prof.dob.strftime('%-d %B %Y'), 'dobdate': str(prof.dob), 'hobbies': serializers.serialize('json', prof.hobbies.all())}
                 print(request.session['profile'])
                 print(mem.profile.hobbies.all())
                 for key, value in request.session.items():
@@ -259,9 +259,7 @@ def updateProfile(request):
         pfl.gender = request_dets['gender']
     pfl.hobbies.set(hobbies)
     pfl.save()
-    request.session['profile'] = {'id': pfl.pk, 'profile_image': pfl.profile_image.url, 'name': pfl.name,
-                                  'email': pfl.email, 'gender': pfl.gender, 'dob': pfl.dob.strftime('%-d %B %Y'),
-                                  'hobbies': serializers.serialize('json', pfl.hobbies.all())}
+    request.session['profile'] = {'id': pfl.pk, 'profile_image': pfl.profile_image.url, 'name': pfl.name, 'email': pfl.email, 'gender': pfl.gender, 'dob': pfl.dob.strftime('%-d %B %Y'), 'dobdate': str(pfl.dob), 'hobbies': serializers.serialize('json', pfl.hobbies.all())}
     return HttpResponse()
 
 
@@ -471,6 +469,8 @@ def cancelRequest(request):
         return HttpResponseBadRequest('Request must be post')
 
 
+# Static files don't get served if the DEBUG is set to False so static files have to be served manually
+# The next three views are to serve the static files
 def static(request, appname, foldername, filename):
     BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     file_name = os.path.join(BASE_DIR, "matchingapp/static") + "/" + appname + "/" + foldername + "/" + filename

@@ -43,19 +43,23 @@
 
 {% block script %}
     <script>
+
+        // Ensures that the filter checkboxes are checked on load
         document.getElementById("Male_chckbox").checked = true;
         document.getElementById("Female_chckbox").checked = true;
         document.getElementById("Other_chckbox").checked = true;
-        let profiles;
+
+        let profiles = [];
+
         const csrftoken = Cookies.get('csrftoken');
+
         let slider =  $("#slider-range");
         let age_range = $("#age_range");
-        if ("{{ profile }}" === "{}")
-        {
-            window.location.pathname = '/profile/'
-        }
+
         let profile = {{ profile|safe }};
         let hobbies = JSON.parse(profile.hobbies);
+
+        // Ajax API query to get all of the profiles for the other users which the user hasn't already matched with or requested to match
         $.ajax({
             url: '/getUsers',
             type: 'GET',
@@ -63,8 +67,9 @@
                 xhr.setRequestHeader("X-CSRFToken", csrftoken);
             },
             success: function (data) {
+                // Once the data is returned, the profiles are sorted in order of how many common hobbies the users share
+                // The profiles are then added to the profiles table
                 profiles = data;
-                let hobbies = JSON.parse(profile.hobbies);
                 console.log(data);
                 data.sort(function(a, b){
                     a = a.hobbies;
@@ -98,6 +103,8 @@
                 console.log(data);
             }
         });
+
+        // When the slider is moved, the age_range variable is updated
           $( function() {
             slider.slider({
               range: true,
@@ -112,6 +119,7 @@
               " - " + slider.slider( "values", 1 ) );
           } );
 
+          // When the user presses the filter button, the profiles which don't match the criteria are hidden
           function updateList() {
               console.log("Filtering");
               profiles.forEach(function (pfl) {
