@@ -31,7 +31,7 @@
 </div>
 <div align="center" id="usersDiv">
     <br/>
-    <div id="usersTopRow">Users</div>
+    <div id="usersTopRow">USERS</div>
     <div align="center" id="usersTable" class="container">
         <div class="row" id="usersRow1">
         </div>
@@ -91,9 +91,7 @@
                 });
                 console.log(data);
                 for (let i = 0; i<data.length; i++){
-                    /*document.getElementById('usersTable').innerHTML += "<tr id='pfl"+data[i].id+"'><td><div class='card' style='width: 14rem;'><img class='card-img-top' src='{{ profile.profile_image }}''><div class='card-body'><h5 class='card-title'>"+data[i].name+"</h5><p class='card-text'>Hobbies: "+data[i].hobbies.toString()+"</p><a href=\'/profile/"+data[i].id+"\' class='btn btn-primary'>Visit profile</a></div></div></td></tr>"
-                    */
-                    $('#usersRow1').append("<div align='center' id='pfl"+data[i].id+"'><div class='card' style='width: 14rem;'><img class='card-img-top' src='{{ profile.profile_image }}''><div class='card-body'><h5 class='card-title'>"+data[i].name+"</h5><p class='card-text'>Hobbies: "+data[i].hobbies.toString()+"</p><a href=\'/profile/"+data[i].id+"\' class='btn btn-primary'>Visit profile</a></div></div></div>");
+                    $('#usersRow1').append("<div align='center' style='margin: 0 auto' id='pfl"+data[i].id+"'><div class='card' style='width: 15rem;'><img class='card-img-top' src='../.."+data[i].img+"'><div class='card-body'><h5 class='card-title'>"+data[i].name+"</h5><p class='card-text'>Hobbies: "+data[i].hobbies.toString()+"</p><a href=\'/profile/"+data[i].id+"\' class='btn btn-primary'>Visit profile</a></div></div></div>");
                 }
             },
             failure: function (data) {

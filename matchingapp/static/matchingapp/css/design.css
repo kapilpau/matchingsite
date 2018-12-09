@@ -134,7 +134,8 @@ button, input[type=button] {
 
 /* Users displayed data design */
 #usersTable{
-    width: 55%;
+    margin: 0 auto;
+    width: 60%;
     font-family: Arial;
 }
 
