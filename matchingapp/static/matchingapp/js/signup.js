@@ -1,4 +1,6 @@
-$(function(){ // this will be called when the DOM is ready
+// Whenever the user presses the Enter key while in an input, the sign up function is called
+// This is to make the form more user friendly, so they don't have use their mouse while filling it out
+$(function(){
     $("input").keyup(function(e){
         if (e.keyCode === 13)
         {
@@ -7,6 +9,14 @@ $(function(){ // this will be called when the DOM is ready
     });
 });
 
+
+/*
+    When the user presses Enter or the Sign Up button, the signUp() method is called. The method initially checks
+    the values of all of the form to ensure that they're all acceptable. If they're not, then the appropriate fields'
+    borders are set to red and the error message is updated to inform the user of why it was unacceptable. If it is
+    acceptable then the details are sent to the server. If the sign up is successful, the user is redirected to their
+    profile page.
+*/
 function signUp() {
     let submittable = true;
     document.getElementById('errorMsg').innerHTML = "";

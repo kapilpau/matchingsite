@@ -306,7 +306,7 @@ def getUsers(request):
                     hobbies.append(hobby.name)
                 today = date.today()
                 born = pfl.dob
-                resp.append({'id': pfl.id, 'name': pfl.name, 'hobbies': hobbies, 'gender': pfl.gender, 'age': today.year - born.year - ((today.month, today.day) < (born.month, born.day))})
+                resp.append({'id': pfl.id, 'img': pfl.profile_image.url, 'name': pfl.name, 'hobbies': hobbies, 'gender': pfl.gender, 'age': today.year - born.year - ((today.month, today.day) < (born.month, born.day))})
         return JsonResponse(resp, safe=False)
 
 
