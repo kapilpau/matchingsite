@@ -1,3 +1,8 @@
+/*
+    When the user accepts or rejects a request, an AJAX request is sent to the server to accept or reject the request.
+    If they accept the request, the accept and reject buttons are replaced with a Send Message button and a Delete Match
+    button. If they reject the request, then the buttons are replaced with a Request Match button
+ */
 function manageRequest(id, action) {
     let csrftoken = Cookies.get('csrftoken');
     $.ajax({
@@ -40,6 +45,11 @@ function manageRequest(id, action) {
     });
 }
 
+
+/*
+    When the user presses the delete match button, an AJAX request is sent to the server to delete the users from each
+    other's matches, and the Send Message and Delete Match buttons are replaced with a Request Match button
+ */
 function deleteMatch(id) {
     let csrftoken = Cookies.get('csrftoken');
     $.ajax({

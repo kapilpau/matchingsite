@@ -1,3 +1,5 @@
+// When the user presses the edit button, the spans have to be converted to inputs to allow the user to be able to edit
+// their profile. It also displays all of the possible hobbies that the user can select
 function switchToEdit() {
     $('[name="hobby"]').show();
     $('#editBtn').hide();
@@ -17,6 +19,10 @@ function switchToEdit() {
     }
 }
 
+
+// When the user saves their profile, it runs a number of checks on the data provided is acceptable
+// If it is, then the data is sent to the server through an AJAX query. If the update succeeds, it
+// updates the inputs to be spans with the new values
 function save() {
     let submittable = true;
     document.getElementById('errorMsg').innerHTML = "";
@@ -81,11 +87,6 @@ function save() {
         }
     }
     profile.checkedHobbies = checkedHobbies;
-
-    document.getElementById('name').outerHTML = "<span id='name'>"+profile.name+"</span>";
-    document.getElementById('dob').outerHTML = "<span id='dob'>"+ profile.dob +"</span>";
-    document.getElementById('email').outerHTML = "<span id='email'>"+ profile.email +"</span>";
-    document.getElementById('gender').outerHTML = "<span id='gender'>"+ profile.gender +"</span>";
     $.ajax({
         url: 'updateProfile/',
         type: 'PUT',
@@ -95,6 +96,10 @@ function save() {
         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
         data: profile,
         success: function (data) {
+            document.getElementById('name').outerHTML = "<span id='name'>"+profile.name+"</span>";
+            document.getElementById('dob').outerHTML = "<span id='dob'>"+ profile.dob +"</span>";
+            document.getElementById('email').outerHTML = "<span id='email'>"+ profile.email +"</span>";
+            document.getElementById('gender').outerHTML = "<span id='gender'>"+ profile.gender +"</span>";
             console.log(data);
         },
         failure: function (data) {
@@ -106,6 +111,9 @@ function save() {
     });
 }
 
+
+// Users can update their profile picture. The update happens through an AJAX query and updates the image shown
+// with JQuery, without the user having to refresh the page
 function uploadNewProfileImage() {
     var csrftoken = Cookies.get('csrftoken');
     var formData = new FormData();
