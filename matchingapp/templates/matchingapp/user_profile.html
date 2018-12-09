@@ -10,7 +10,7 @@
     <div id="profileDiv">
         <br />
         <img id="profileImg" src="{{ profile.profile_image }}" height="200px">
-        <br />
+        <br /><br />
         {% if profile.name is not None %}
             <div align="center" id="addImg">
             <label id="imageFile">Choose image
@@ -20,6 +20,7 @@
         {% endif %}
         {% block accountInfo %}
         {% endblock %}
+        <br />
         <label class="profileLabel" for="name">Name:</label><br/>
         <span id="name">{{ profile.name }}</span>
         <br /><br/>
