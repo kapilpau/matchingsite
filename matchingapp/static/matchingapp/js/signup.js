@@ -49,6 +49,7 @@ function signUp() {
     {
         document.getElementById('password').style.borderColor = 'red';
         document.getElementById('errorMsg').innerHTML += "Password must be at least 8 characters long and contain a combination of lower-case letters, upper-case letters, digits and special characters (!@_)<br />";
+        submittable = false;
     }
     if (document.getElementById('name').value === "" || !/^[a-zA-Z ]+$/.test(document.getElementById('name').value))
     {
