@@ -32,7 +32,7 @@ let chat_socket = new WebSocket(ws_scheme + '://' + window.location.host + "/cha
 function sendMsg() {
     let message = {
         command: 'send',
-        message: $('#compose').val()
+        message: $('#compose').val().trim()
     };
     chat_socket.send(JSON.stringify(message));
 
@@ -57,13 +57,14 @@ chat_socket.onmessage = function(resp) {
     if ((resp.data !== 'ConnectionSuccessful') && (resp.data !== 'MessageReceived'))
     {
         let data = JSON.parse(resp.data);
-        console.log(data);
-        let newMsg = data.text.sender + " @ " + data.text.sent_at + ": " + data.text.contents + "<br />";
-        if (document.getElementById('chatHistory').innerHTML.replace(/\r?\s|\r/g, "") === "Nomessagessentyet,sendonenow")
+        console.log(data.text.contents);
+        let newMsg = data.text.sender + " @ " + data.text.sent_at + ": " + data.text.contents + "\n";
+        console.log(newMsg);
+        if (document.getElementById('chatHistory').innerText.replace(/\r?\s|\r/g, "") === "Nomessagessentyet,sendonenow")
         {
-            document.getElementById('chatHistory').innerHTML = newMsg;
+            document.getElementById('chatHistory').innerText = newMsg;
         } else {
-            document.getElementById('chatHistory').innerHTML += newMsg;
+            document.getElementById('chatHistory').innerText += newMsg;
         }
         scrollDown();
     } else if (resp.data === 'MessageReceived'){

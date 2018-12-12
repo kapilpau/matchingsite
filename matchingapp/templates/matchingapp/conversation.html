@@ -13,7 +13,7 @@
     No messages sent yet, send one now
 {% else %}
 {% for msg in msgs %}
-    {{ msg.sender }} @ {{ msg.sent_at }}: {{ msg.contents }} <br />
+    {{ msg.sender }} @ {{ msg.sent_at }}: {{ msg.contents|linebreaksbr }} <br />
 {% endfor %}
 {% endif %}
 </div>
