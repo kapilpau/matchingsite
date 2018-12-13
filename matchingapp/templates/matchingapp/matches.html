@@ -8,31 +8,39 @@
 
 {% block content %}
     <div align="center" id="matchRequests">
-        <h2>Match Requests</h2>
-        <table id="matchRequestTable">
-            <tr>
-                <th class="profileLabel">Name</th><th class="profileLabel">Action</th>
-            </tr>
-            {% for request in match_requests %}
-                <tr id="req{{ request.id }}">
-                    <td><a href="/profile/{{ request.id }}">{{ request.name }}</a></td><td><i onclick="manageRequest({{ request.id }}, 'accept')" class="material-icons">done</i><i onclick="manageRequest({{ request.id }}, 'reject')" class="material-icons">clear</i></td>
-                </tr>
-            {% endfor %}
-        </table>
+    <h2>Match Requests</h2>
+        <div align="center" class="container">
+        {% for request in match_requests %}
+        <div class="row">
+            <div align='center' style='margin: 0 auto' id='req{{ request.id }}'>
+                <div class='card' style='width: 15rem;'>
+                    <div class='card-body'>
+                        <a href="/profile/{{ request.id }}"><h5 class='card-title'>{{ request.name }}</h5></a>
+                        <i onclick="manageRequest({{ request.id }}, 'accept')" class="material-icons">done</i>
+                        <i onclick="manageRequest({{ request.id }}, 'reject')" class="material-icons">clear</i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        </div>
     </div>
     <div align="center" id="matches">
-        <h2>Matches</h2>
-        <table id="matchesTable">
-            <tr>
-                <th class="profileLabel">Name</th>
-                <th class="profileLabel">Action</th>
-            </tr>
-            {% for match in matches %}
-            <tr id="match{{ match.id }}">
-                <th><a href="/profile/{{ match.id }}">{{ match.name }}</a></th>
-                <th><a href="/findConvo/{{ match.id }}/"><i class="material-icons">mail</i></a><i onclick="deleteMatch({{ match.id }})" class="material-icons">clear</i></th>
-            </tr>
-            {% endfor %}
-        </table>
+    <h2>Matches</h2>
+        <div align="center" class="container">
+        {% for match in matches %}
+        <div class="row">
+            <div align="center" style="margin: 0 auto">
+                <div class='card' style='width: 15rem;'>
+                    <div class='card-body'>
+                        <a href="/profile/{{ match.id }}"><h5 class='card-title'>{{ match.name }}</h5></a>
+                        <a href="/findConvo/{{ match.id }}/" class='btn btn-primary'><i class="material-icons">mail</i></a>
+                        <i onclick="deleteMatch({{ match.id }})" class="material-icons">clear</i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        </div>
     </div>
 {% endblock %}
