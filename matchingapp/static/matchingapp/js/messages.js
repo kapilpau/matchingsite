@@ -45,6 +45,7 @@ function createChat() {
                 window.location.pathname ='/messages/' + data.id;
             },
             data: {
+                'name': document.getElementById('chatName').val(),
                 'others': others.join(',')
             }
         });

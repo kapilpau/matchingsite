@@ -446,7 +446,10 @@ def findGroupChat(request):
     for convo in convos:
         if set(convo.participants.all()) == set(parts):
             return JsonResponse({'id': convo.id}, safe=False)
-    name = ', '.join(sorted(names))
+    if request.POST['name'] == "":
+        name = ', '.join(sorted(names))
+    else:
+        name = request.POST['name']
     convo = Conversation.objects.create(name=name)
     for part in parts:
         convo.participants.add(part)
