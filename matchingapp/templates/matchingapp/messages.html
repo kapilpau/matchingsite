@@ -16,11 +16,11 @@
                 {% if conversation.read == True %}
                 <div class='card-body'>
                     <a href="/messages/{{ conversation.id }}"><h5 class='card-title'>{{ conversation.name }}</h5></a>
-                    <a href="/messages/{{ conversation.id }}" class='btn btn-primary'>Go to dialog</a>
+                    <a href="/messages/{{ conversation.id }}" class='btn btn-primary'>Go to conversation</a>
                 </div>
                 {% else %}
                 <div class='card-body'>
-                    <a href="/messages/{{ conversation.id }}"><h5 class='card-title'>{{ conversation.name }}</h5></a>
+                    <a href="/messages/{{ conversation.id }}"><h5 class='card-title'><strong>{{ conversation.name }}</strong></h5></a>
                     <a href="/messages/{{ conversation.id }}" class='btn btn-primary'>Go to dialog</a>
                 </div>
                 {% endif %}
