@@ -98,7 +98,7 @@
                     }
                 });
                 for (let i = 0; i<profiles.length; i++){
-                    $('#usersRow1').append("<div align='center' style='margin: 0 auto' id='pfl"+profiles[i].id+"'><div class='card' style='width: 15rem;'><img class='card-img-top' src='../.."+profiles[i].img+"'><div class='card-body'><h5 class='card-title'>"+profiles[i].name+"</h5><p class='card-text'>Hobbies:\n"+profiles[i].hobbies.join(", ")+"</p><a href=\'/profile/"+profiles[i].id+"\' class='btn btn-primary'>Visit profile</a></div></div></div>");
+                    $('#usersRow1').append("<div align='center' style='margin: 0 auto' id='pfl"+profiles[i].id+"'><div class='card' style='width: 15rem;'><img class='card-img-top' src='../.."+profiles[i].img+"'><div class='card-body'><h5 class='card-title'>"+profiles[i].name+"</h5><p class='card-text'>Hobbies:</p><br /><p class='card-text'>"+profiles[i].hobbies.join(", ")+"</p><a href=\'/profile/"+profiles[i].id+"\' class='btn btn-primary'>Visit profile</a></div></div></div>");
                 }
             },
             failure: function (data) {
