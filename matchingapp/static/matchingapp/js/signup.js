@@ -94,8 +94,8 @@ function signUp() {
         usrProf.dob = document.getElementById('dob').value;
         usrProf.email = document.getElementById('email').value;
         usrProf.gender = document.getElementById('gender').value;
-        var checkedHobbies = [];
-        var selected = $('[name="hobby"]');
+        let checkedHobbies = [];
+        let selected = $('[name="hobby"]');
         for (var i = 0; i<selected.length; i++)
         {
             if (selected[i].checked)

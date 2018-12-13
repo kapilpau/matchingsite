@@ -3,13 +3,38 @@
 {% load staticfiles %}
 
 {% block head %}
-<script src="{% static 'matchingapp/js/messages.js' %}"></script>
+    <script src="{% static 'matchingapp/js/messages.js' %}"></script>
+    <style>
+        /* The Modal (background) */
+        .modal {
+          display: none; /* Hidden by default */
+          position: fixed; /* Stay in place */
+          z-index: 1; /* Sit on top */
+          padding-top: 100px; /* Location of the box */
+          left: 0;
+          top: 0;
+          width: 100%; /* Full width */
+          height: 100%; /* Full height */
+          overflow: auto; /* Enable scroll if needed */
+          background-color: rgb(0,0,0); /* Fallback color */
+          background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        }
+
+        /* Modal Content */
+        .modal-content {
+          background-color: #fefefe;
+          margin: auto;
+          padding: 20px;
+          border: 1px solid #888;
+          width: 80%;
+        }
+    </style>
 {% endblock %}
 
 {% block content %}
     <div align="center" class="container">
-    <h2>Messages</h2>
-        <div class="row">
+    <h2>Messages <i class="material-icons" title="add" id="addBtn">add</i></h2>
+    <div class="row">
         {% for conversation in conversations %}
         <div align="center" style="margin: 0 auto">
             <div class='card' style='width: 15rem;'>
@@ -29,10 +54,30 @@
         {% endfor %}
     </div>
     </div>
+
+    <div id="myModal" class="modal">
+
+      <!-- Modal content -->
+      <div class="modal-content">
+            <span class="close">&times;</span>
+            <h4 align="center">New Chat</h4>
+            <label for="chatName" id="chatName-label">Chat Name (optional): </label>
+            <input type="text" name="name" id="chatName" placeholder="Chat Name"/>
+            <div id="checkBoxLabel">
+            <label for="people" id="people-label">Participants</label>
+                {% for person in matches %}
+                  <div class="item"><input type="checkbox" name="people" id="{{ person.username }}"/><label for="{{ person.username }}">{{ person.name }}</label></div>
+                {% endfor %}
+            </div>
+            <button id="createBtn" onclick="createChat()">Create Chat</button>
+      </div>
+
+    </div>
 {% endblock %}
 
 {% block script %}
     <script>
-        let matches = {{ matches|safe }}
+        let matches = {{ matches|safe }};
+        let csrftoken = Cookies.get('csrftoken');
     </script>
 {% endblock %}

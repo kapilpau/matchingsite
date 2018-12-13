@@ -219,7 +219,7 @@ def getContext(request):
         mem = Member.objects.get(username=request.session['username'])
         matches = []
         for match in mem.matches.all():
-            matches.append({'id': match.profile.id, 'name': match.profile.name, 'img': match.profile.profile_image.url})
+            matches.append({'id': match.profile.id, 'name': match.profile.name, 'username': match.username, 'img': match.profile.profile_image.url})
         request.session['matches'] = matches
     except:
         matches = []
@@ -228,7 +228,7 @@ def getContext(request):
         mem = Member.objects.get(username=request.session['username'])
         match_requests = []
         for match in mem.match_requests.all():
-            match_requests.append({'id': match.profile.id, 'name': match.profile.name, 'img': match.profile.profile_image.url})
+            match_requests.append({'id': match.profile.id, 'name': match.profile.name, 'username': match.username, 'img': match.profile.profile_image.url})
         request.session['match_requests'] = match_requests
     except:
         match_requests = []
@@ -410,6 +410,7 @@ def messages(request):
             contextConvos.append({'id': convo.id, 'name': convo.name, 'read': readStatus})
     context = getContext(request)
     context['conversations'] = contextConvos
+    print(context)
     return render(request, 'matchingapp/messages.html', context)
 
 

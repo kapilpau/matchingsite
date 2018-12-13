@@ -50,12 +50,12 @@
 
         let profiles = [];
 
-        const csrftoken = Cookies.get('csrftoken');
+        let csrftoken = Cookies.get('csrftoken');
 
         let slider =  $("#slider-range");
         let age_range = $("#age_range");
 
-        let profile = {{ profile|safe }};
+        profile = {{ profile|safe }};
         let profHobbies = JSON.parse(profile.hobbies);
         let hobbies = [];
         for (var hobby in profHobbies){
