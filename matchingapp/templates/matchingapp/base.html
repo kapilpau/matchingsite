@@ -49,6 +49,7 @@
     } else if ("{{ username }}" !== "" && (window.location.pathname === '/login' || window.location.pathname === '/login/' ||  window.location.pathname === '/signup')) {
         window.location.pathname = '/';
     }
+    let profile = {{ profile|safe }}
 </script>
 {% block script %}
 {% endblock %}

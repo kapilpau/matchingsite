@@ -2,23 +2,37 @@
 
 {% load staticfiles %}
 
+{% block head %}
+<script src="{% static 'matchingapp/js/messages.js' %}"></script>
+{% endblock %}
+
 {% block content %}
-    <div align="center">
+    <div align="center" class="container">
     <h2>Messages</h2>
-    <table id="conversationTables" style="font-family: Arial;">
-        <tr>
-              <th class="profileLabel">Name</th>
-{#            <th class="profileLabel">Action</th>#}
-        </tr>
+        <div class="row">
         {% for conversation in conversations %}
-            <tr>
+        <div align="center" style="margin: 0 auto">
+            <div class='card' style='width: 15rem;'>
                 {% if conversation.read == True %}
-                    <td><a href="/messages/{{ conversation.id }}">{{ conversation.name }}</a></td>
+                <div class='card-body'>
+                    <a href="/messages/{{ conversation.id }}"><h5 class='card-title'>{{ conversation.name }}</h5></a>
+                    <a href="/messages/{{ conversation.id }}" class='btn btn-primary'>Go to dialog</a>
+                </div>
                 {% else %}
-                    <td><a href="/messages/{{ conversation.id }}">{{ conversation.name }}</a></td>
+                <div class='card-body'>
+                    <a href="/messages/{{ conversation.id }}"><h5 class='card-title'>{{ conversation.name }}</h5></a>
+                    <a href="/messages/{{ conversation.id }}" class='btn btn-primary'>Go to dialog</a>
+                </div>
                 {% endif %}
-            </tr>
+            </div>
+        </div>
         {% endfor %}
-    </table>
     </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        let matches = {{ matches|safe }}
+    </script>
 {% endblock %}

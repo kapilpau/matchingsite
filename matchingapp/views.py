@@ -219,7 +219,7 @@ def getContext(request):
         mem = Member.objects.get(username=request.session['username'])
         matches = []
         for match in mem.matches.all():
-            matches.append({'id': match.profile.id, 'name': match.profile.name})
+            matches.append({'id': match.profile.id, 'name': match.profile.name, 'img': match.profile.profile_image.url})
         request.session['matches'] = matches
     except:
         matches = []
@@ -228,7 +228,7 @@ def getContext(request):
         mem = Member.objects.get(username=request.session['username'])
         match_requests = []
         for match in mem.match_requests.all():
-            match_requests.append({'id': match.profile.id, 'name': match.profile.name})
+            match_requests.append({'id': match.profile.id, 'name': match.profile.name, 'img': match.profile.profile_image.url})
         request.session['match_requests'] = match_requests
     except:
         match_requests = []
@@ -430,6 +430,27 @@ def convoRedirect(request, id):
     convo.participants.add(user)
     convo.save()
     return redirect('/messages/' + str(convo.id))
+
+
+# A redirecting view to allow the user to go to their group chat or creates it
+def findGroupChat(request):
+    others = request.POST['others'].split(',')
+    names = [Member.objects.get(username=request.session['username']).profile.name]
+    parts = []
+    for usr in others:
+        parts.append(Member.objects.get(username=usr))
+        names.append(Member.objects.get(username=usr).profile.name)
+    parts.append(Member.objects.get(username=request.session['username']))
+    convos = Conversation.objects.all()
+    for convo in convos:
+        if set(convo.participants.all()) == set(parts):
+            return JsonResponse({'id': convo.id}, safe=False)
+    name = ', '.join(sorted(names))
+    convo = Conversation.objects.create(name=name)
+    for part in parts:
+        convo.participants.add(part)
+    convo.save()
+    return JsonResponse({'id': convo.id}, safe=False)
 
 
 # A view to which contains the user's conversation
