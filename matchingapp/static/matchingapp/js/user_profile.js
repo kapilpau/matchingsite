@@ -2,8 +2,8 @@
 // their profile. It also displays all of the possible hobbies that the user can select
 function switchToEdit() {
     $('[name="hobby"]').show();
-    $('#editBtn').hide();
-    $('#saveBtn').show();
+    document.getElementById('editBtn').hidden = true;
+    document.getElementById('saveBtn').hidden = false;
     $("[id*='label']").show();
     $("[id*='br']").show();
     document.getElementById('name').outerHTML = "<input type='text' placeholder='Name' id='name' />";
@@ -69,8 +69,8 @@ function save() {
     $('[name="hobby"]').hide();
     $("[id*='label']").hide();
     $("[id*='br']").hide();
-    $('#editBtn').show();
-    $('#saveBtn').hide();
+    document.getElementById('editBtn').hidden = false;
+    document.getElementById('saveBtn').hidden = true;
     profile.name = document.getElementById('name').value;
     profile.dob = document.getElementById('dob').value;
     profile.email = document.getElementById('email').value;
@@ -140,4 +140,72 @@ function uploadNewProfileImage() {
         },
         processData: false
     });
+}
+
+
+$(function(){
+    document.getElementById('resetPassword').onclick = function() {
+      document.getElementById('myModal').style.display = "block";
+      document.getElementById('existingPassword-label').style.display = "block";
+      document.getElementById('newPassword-label').style.display = "block";
+      document.getElementById('confirmPassword-label').style.display = "block";
+
+    };
+
+    document.getElementsByClassName("close")[0].onclick = function() {
+      document.getElementById('myModal').style.display = "none";
+    };
+
+    window.onclick = function(event) {
+      if (event.target === document.getElementById('myModal')) {
+        document.getElementById('myModal').style.display = "none";
+      }
+    };
+    $(document).on('keyup', function (e) {
+        if (e.keyCode === 27)
+        {
+            document.getElementById('myModal').style.display = "none";
+        }
+    })
+});
+
+function updatePassword() {
+    let submittable = true;
+    if (document.getElementById('newPassword').value === "" && !(/[a-z]+/.test(document.getElementById('newPassword').value) && /[A-Z]+/.test(document.getElementById('newPassword').value) && /[0-9]+/.test(document.getElementById('newPassword').value) && /[!@_]+/.test(document.getElementById('newPassword').value))){
+        document.getElementById('newPassword').style.borderColor = 'red';
+        document.getElementById('errorMsg').innerHTML += "Password must be at least 8 characters long and contain a combination of lower-case letters, upper-case letters, digits and special characters (!@_)<br />";
+        submittable = false;
+    }
+
+    if (document.getElementById('confirmPassword').value !== document.getElementById('newPassword').value){
+        document.getElementById('errorMsg').innerHTML += "<br />";
+        submittable = false;
+    }
+    let csrftoken = Cookies.get('csrftoken');
+
+    if (submittable)
+    {
+        $.ajax({
+            url: '/saveNewPassword/',
+            type: 'POST',
+            data: {
+                oldPassword: document.getElementById('existingPassword').value,
+                newPassword: document.getElementById('newPassword').value,
+                csrfmiddlewaretoken: csrftoken
+            },
+            success: function (data) {
+                document.getElementById('myModal').style.display = "none";
+            },
+            error: function (data) {
+                if (data.responseText === 'Incorrect existing password')
+                {
+                    document.getElementById('existingPassword').style.borderColor = 'red';
+                }
+            },
+            failure: function (data) {
+                alert('Something went wrong');
+            }
+
+        });
+    }
 }

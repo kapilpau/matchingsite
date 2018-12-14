@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '$&41p^(+h106(e4)6-*!oxj-i4ihknuq*5k+^tbst^s!5+grck'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -140,3 +140,9 @@ CHANNEL_LAYERS = {
     }
 }
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.sendgrid.net'
+EMAIL_HOST_USER = 'apikey'
+EMAIL_HOST_PASSWORD = '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'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True

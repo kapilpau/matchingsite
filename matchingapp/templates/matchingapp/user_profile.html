@@ -3,7 +3,32 @@
 {% load static %}
 
 {% block head %}
-<script src="{% static 'matchingapp/js/user_profile.js' %}"></script>
+    <script src="{% static 'matchingapp/js/user_profile.js' %}"></script>
+    <style>
+        /* The Modal (background) */
+        .modal {
+          display: none; /* Hidden by default */
+          position: fixed; /* Stay in place */
+          z-index: 1; /* Sit on top */
+          padding-top: 100px; /* Location of the box */
+          left: 0;
+          top: 0;
+          width: 100%; /* Full width */
+          height: 100%; /* Full height */
+          overflow: auto; /* Enable scroll if needed */
+          background-color: rgb(0,0,0); /* Fallback color */
+          background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        }
+
+        /* Modal Content */
+        .modal-content {
+          background-color: #fefefe;
+          margin: auto;
+          padding: 20px;
+          border: 1px solid #888;
+          width: 80%;
+        }
+    </style>
 {% endblock %}
 
 {% block content %}
@@ -17,9 +42,10 @@
             <input type="file" name="newProfileImg" id="newProfileImg" onchange="uploadNewProfileImage()"/>
             </label>
             </div>
+            <div align="center" id="pwdRst">
+            <button id="resetPassword">Update Password</button>
+            </div>
         {% endif %}
-        {% block accountInfo %}
-        {% endblock %}
         <br />
         <label class="profileLabel" for="name">Name:</label><br/>
         <span id="name">{{ profile.name }}</span>
@@ -50,6 +76,35 @@
         {% endblock %}
         <p id="errorMsg" style="color: red"></p>
     </div>
+
+    <div id="myModal" class="modal">
+
+      <!-- Modal content -->
+      <div class="modal-content">
+            <span class="close">&times;</span>
+            <h4 align="center">Reset Password</h4>
+            <div align="center">
+                <div class="item">
+                    <label for="existingPassword" id="existingPassword-label">Existing Password: </label>
+                    <input type="password" name="existingPassword" id="existingPassword" placeholder="Existing Password"/>
+                </div>
+                <br />
+                <div class="item">
+                    <label for="newPassword" id="newPassword-label">New Password: </label>
+                    <input type="password" name="newPassword" id="newPassword" placeholder="New Password"/>
+                </div>
+                <br />
+                <div class="item">
+                    <label for="confirmPassword" id="confirmPassword-label">Confirm Password: </label>
+                    <input type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm Password"/>
+                </div>
+                <br />
+                <p id="errorMsg" style="color: red"></p>
+                <button id="updatePassword" onclick="updatePassword()">Update Password</button>
+            </div>
+      </div>
+
+    </div>
 {% endblock %}
 
 {% block script %}
@@ -58,9 +113,8 @@
         $('[name="hobby"]').hide();
         $("[id*='label']").hide();
         $("[id*='br']").hide();
-        $('#saveBtn').hide();
-        $('#requestMatch').hide();
-        const profile = {{ profile|safe }} || {};
+        document.getElementById('saveBtn').hidden = true;
+        const profile = {{ profile|safe }};
         let profile_img = "{{ profile.profile_image.url }}";
         let hobbies = JSON.parse(profile.hobbies);
         hobbies.forEach(function (hobby) {

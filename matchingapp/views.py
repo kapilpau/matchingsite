@@ -7,7 +7,12 @@ from django.db.models.functions import Lower, datetime
 import random, os
 from datetime import date
 from bcrypt import hashpw
-import json
+from django.utils.crypto import get_random_string
+from django.core.mail import send_mail
+from django.views.decorators.csrf import csrf_exempt
+import requests
+from sendgrid.helpers.mail import *
+import sendgrid
 
 # Fixed salt for hashing passwords to make sure that the hashing is constant
 salt = b'$2b$12$Jx1Vfxjy0iuMxP0cBeDctu'
@@ -533,3 +538,16 @@ def favicon(request):
     else:
         print("Doesn't exist bro")
     return FileResponse(file)
+
+
+def saveNewPassword(request):
+    if hashpw(request.POST['oldPassword'].encode('utf-8'), salt).decode('utf-8') == Member.objects.get(username=request.session['username']).password:
+        try:
+            mem = Member.objects.get(username=request.session['username'])
+            mem.password = hashpw(request.POST['newPassword'].encode('utf-8'), salt).decode('utf-8')
+            mem.save()
+        except:
+            return HttpResponseServerError()
+        return HttpResponse()
+    else:
+        return HttpResponseBadRequest("Incorrect existing password")

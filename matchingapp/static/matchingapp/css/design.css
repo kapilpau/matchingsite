@@ -192,7 +192,7 @@ h2 {
 }
 
 /* Profile image button design */
-#imageFile {
+#imageFile, #passwordReset {
     padding: 10px !important;
     background: #2196f3 !important;
     display: table !important;
