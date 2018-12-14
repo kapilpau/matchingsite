@@ -10,9 +10,6 @@ from bcrypt import hashpw
 from django.utils.crypto import get_random_string
 from django.core.mail import send_mail
 from django.views.decorators.csrf import csrf_exempt
-import requests
-from sendgrid.helpers.mail import *
-import sendgrid
 
 # Fixed salt for hashing passwords to make sure that the hashing is constant
 salt = b'$2b$12$Jx1Vfxjy0iuMxP0cBeDctu'
