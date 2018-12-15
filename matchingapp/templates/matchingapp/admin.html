@@ -8,6 +8,7 @@
 
 
 {% block content %}
+    <div align="center">
     <h1>Hobbies:</h1>
     <i class="material-icons" title="add" id="addBtn" onclick="showForm()">add</i>
     <div id="addItemFormDiv">
@@ -17,8 +18,9 @@
     </div>
     <table id="product-table">
         <tr>
-            <th>Hobby</th>
-            <th>Action</th>
+            <th class="profileLabel">Hobby</th>
+            <th class="profileLabel">Action</th>
         </tr>
     </table>
+    </div>
 {% endblock %}
