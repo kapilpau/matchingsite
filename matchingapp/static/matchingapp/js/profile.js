@@ -15,17 +15,11 @@ function requestMatch(id) {
             id: id
         },
         success: function(data) {
-            console.log("Success");
-            console.log(data);
             document.getElementById('controlsDiv').innerHTML = '<button onclick="cancelRequest('+id+')">Cancel Request</button>';
         },
         failure: function(data) {
-            console.log("Failure");
-            console.log(data);
         },
         error: function(data) {
-            console.log("Error");
-            console.log(data);
         }
     });
 }
@@ -47,17 +41,11 @@ function cancelRequest(id) {
             id: id
         },
         success: function(data) {
-            console.log("Success");
-            console.log(data);
             document.getElementById('controlsDiv').innerHTML = '<button onclick="requestMatch('+id+')">Request Match</button>';
         },
         failure: function(data) {
-            console.log("Failure");
-            console.log(data);
         },
         error: function(data) {
-            console.log("Error");
-            console.log(data);
         }
     });
 }
@@ -70,7 +58,6 @@ $(document).ready( function () {
             id = window.location.pathname.split("/")[window.location.pathname.split("/").length -2];
         }
         $('#toggleAdmin').on('click', function () {
-                console.log("Toggled");
                 $.ajax({
                 url: '/toggleAdmin/',
                 type: 'POST',
@@ -79,18 +66,6 @@ $(document).ready( function () {
                 },
                 data: {
                     id: id
-                },
-                success: function(data) {
-                    console.log("Success");
-                    console.log(data);
-                },
-                failure: function(data) {
-                    console.log("Failure");
-                    console.log(data);
-                },
-                error: function(data) {
-                    console.log("Error");
-                    console.log(data);
                 }
             });
         });

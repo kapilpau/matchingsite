@@ -20,10 +20,16 @@ $(function(){
 function signUp() {
     let submittable = true;
     document.getElementById('errorMsg').innerHTML = "";
-    if (document.getElementById('username').value === "" || !/^[a-zA-Z0-9_-]+$/.test(document.getElementById('username').value))
+    if (document.getElementById('username').value === "" || !/^[a-zA-Z0-9_\-]+$/.test(document.getElementById('username').value))
     {
         document.getElementById('username').style.borderColor = 'red';
-        document.getElementById('errorMsg').innerHTML += "Name cannot be empty and can only contain alphanumeric characters and _ or +<br />";
+        document.getElementById('errorMsg').innerHTML += "Name cannot be empty and can only contain alphanumeric characters and _ or -<br />";
+        submittable = false;
+    }
+    if (document.getElementById('password').value === document.getElementById('username').value)
+    {
+        document.getElementById('password').style.borderColor = 'red';
+        document.getElementById('errorMsg').innerHTML += "Password cannot be the same as username<br />";
         submittable = false;
     }
     if (document.getElementById('password').value === "")
@@ -45,7 +51,7 @@ function signUp() {
         document.getElementById('errorMsg').innerHTML += "Passwords do not match<br />";
         submittable = false;
     }
-    if (!(/[a-z]+/.test(document.getElementById('password').value) && /[A-Z]+/.test(document.getElementById('password').value) && /[0-9]+/.test(document.getElementById('password').value) && /[!@_]+/.test(document.getElementById('password').value)))
+    if (!(/[a-z]+/.test(document.getElementById('password').value) && /[A-Z]+/.test(document.getElementById('password').value) && /[0-9]+/.test(document.getElementById('password').value) && /[!@_]+/.test(document.getElementById('password').value) && document.getElementById('password').value.length >= 8))
     {
         document.getElementById('password').style.borderColor = 'red';
         document.getElementById('errorMsg').innerHTML += "Password must be at least 8 characters long and contain a combination of lower-case letters, upper-case letters, digits and special characters (!@_)<br />";
@@ -118,18 +124,14 @@ function signUp() {
                     csrfmiddlewaretoken: csrftoken
                 },
                 success: function (data) {
-                    console.log("Success");
                     profile = usrProf;
                     window.location.replace('../profile')
                 },
                 failure: function (data) {
-                    console.log(data);
                     document.getElementById('username').style.borderColor = 'red';
                     document.getElementById('password').style.borderColor = 'red';
                 },
                 error: function (jqXHR, textStatus, error) {
-                    console.log("Error");
-                    console.log(jqXHR);
                     if (jqXHR.responseText === "Username already taken") {
                         document.getElementById('username').style.borderColor = 'red';
                         alert("Username already taken");

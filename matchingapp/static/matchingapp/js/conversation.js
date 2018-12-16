@@ -40,8 +40,6 @@ function sendMsg() {
 
 // When the WebSocket connection is opened, a join message is sent to join the connection to the correct channel group
 chat_socket.onopen = function (evt) {
-    console.log("Connected to websocket!");
-    console.log(evt);
     chat_socket.send(JSON.stringify({command: 'join', convoID: window.location.pathname.split('/')[2]}))
 };
 
@@ -53,13 +51,10 @@ chat_socket.onopen = function (evt) {
     compose textarea. The final is a normal message receive, this then added to the messages scroll box
  */
 chat_socket.onmessage = function(resp) {
-    console.log(resp);
     if ((resp.data !== 'ConnectionSuccessful') && (resp.data !== 'MessageReceived'))
     {
         let data = JSON.parse(resp.data);
-        console.log(data.text.contents);
         let newMsg = data.text.sender + " @ " + data.text.sent_at + ": " + data.text.contents + "\n";
-        console.log(newMsg);
         if (document.getElementById('chatHistory').innerText.replace(/\r?\s|\r/g, "") === "Nomessagessentyet,sendonenow")
         {
             document.getElementById('chatHistory').innerText = newMsg;
@@ -76,7 +71,6 @@ chat_socket.onmessage = function(resp) {
 
 // When the connection is closed, the user is alerted to the error and told to reload the page, to reconnect
 chat_socket.onclose = function () {
-    console.log("Socket closed");
     alert('Connection to chat server has been lost, please reload the page');
 
 };

@@ -20,8 +20,6 @@ $(document).ready(function (e) {
             });
         },
         failure: function (data) {
-            console.log("Failure");
-            console.log(data);
             alert(data);
         }
     });
@@ -91,8 +89,6 @@ function doAdd() {
             $('#addBtn').show();
         },
         failure: function (data) {
-            console.log("Failure");
-            console.log(data);
             alert(data);
         }
     });

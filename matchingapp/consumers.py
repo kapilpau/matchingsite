@@ -13,7 +13,6 @@ class ChatConsumer(AsyncConsumer):
     # When the connection is established, the user variable is set
     async def websocket_connect(self, event):
         self.user = Member.objects.get(username=self.scope['session']['username'])
-        print(event)
         await self.send({
             "type": "websocket.accept",
         })
@@ -32,12 +31,7 @@ class ChatConsumer(AsyncConsumer):
                 return
         except AttributeError:
             print("Exception caught")
-        # await self.send({
-        #     "type": "websocket.send",
-        #     "text": event["text"],
-        # })
         await self.send({"type": "websocket.send", 'text': 'MessageReceived'})
-        print(self.channel_layer)
         mes = Message.objects.create(sender=self.user, contents=msg['message'], sent_at=datetime.now(), conversation=Conversation.objects.get(id=self.convo_id))
         mes.save()
         await self.channel_layer.group_send(self.convo_id, {
@@ -53,7 +47,6 @@ class ChatConsumer(AsyncConsumer):
     # The disconnect event must be handled but, in this situation, there is nothing that needs to be done on disconnect
     # so it simply prints out that it has disconnected
     async def websocket_disconnect(self, event):
-        print(event)
         print("Disconnected")
 
     # When the receive function alerts the conversation group that there is a new message, it triggers a send event

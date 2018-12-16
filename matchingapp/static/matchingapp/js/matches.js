@@ -16,8 +16,6 @@ function manageRequest(id, action) {
            action: action
         },
         success: function (data) {
-           console.log("Success");
-            console.log(data);
             if (action === 'accept') {
                 if (document.getElementById('matchesTable')) {
                     document.getElementById('matchesTable').innerHTML += '<tr id="match' + data.id + '"><td><a href="/profile/"' + data.id + '>' + data.name + '</td><td><a href="/findConvo/' + data.id + '/"><i class="material-icons">mail</i></a><i onclick="deleteMatch(' + data.id + ')" class="material-icons">clear</i></td></tr>';
@@ -35,12 +33,8 @@ function manageRequest(id, action) {
             }
         },
         failure: function (data) {
-           console.log("Failure");
-            console.log(data);
         },
         error: function (data) {
-           console.log("Error");
-            console.log(data);
         }
     });
 }
@@ -62,8 +56,6 @@ function deleteMatch(id) {
            id: id
         },
         success: function (data) {
-           console.log("Success");
-            console.log(data);
             let element = document.getElementById('match'+id);
             if (element)
             {
@@ -71,14 +63,6 @@ function deleteMatch(id) {
             } else {
                     document.getElementById('controlsDiv').innerHTML = '<button onclick="requestMatch('+id+')">Request Match</button>'
             }
-        },
-        failure: function (data) {
-           console.log("Failure");
-            console.log(data);
-        },
-        error: function (data) {
-           console.log("Error");
-            console.log(data);
         }
     });
 }

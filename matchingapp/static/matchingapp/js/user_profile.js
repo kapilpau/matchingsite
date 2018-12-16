@@ -100,13 +100,10 @@ function save() {
             document.getElementById('dob').outerHTML = "<span id='dob'>"+ profile.dob +"</span>";
             document.getElementById('email').outerHTML = "<span id='email'>"+ profile.email +"</span>";
             document.getElementById('gender').outerHTML = "<span id='gender'>"+ profile.gender +"</span>";
-            console.log(data);
         },
         failure: function (data) {
-            console.log(data);
         },
         error: function (data) {
-            console.log(data);
         }
     });
 }
@@ -118,7 +115,6 @@ function uploadNewProfileImage() {
     var csrftoken = Cookies.get('csrftoken');
     var formData = new FormData();
     var new_img = document.getElementById('newProfileImg').files[0];
-    console.log(new_img);
     formData.append('new_img', new_img, 'new_img.png');
     $.ajax({
         url: 'uploadNewProfileImage/',
@@ -130,13 +126,10 @@ function uploadNewProfileImage() {
         },
         success: function (data) {
             $('#profileImg').attr('src', data.url);
-            console.log(data);
         },
         failure: function (data) {
-            console.log(data);
         },
         error: function (data) {
-            console.log(data);
         },
         processData: false
     });

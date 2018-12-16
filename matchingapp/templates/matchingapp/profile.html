@@ -62,8 +62,8 @@
 {% endblock %}
 
 {% block content %}
-    <div align="center" id="controlsDiv">
     {% if isAdmin == True %}
+    <div id="toggleAdminDiv" align="center">
     <h2>Toggle {{ profile.name }}'s admin status
         {% if profile.isAdmin == True %}
             <label class="switch">
@@ -77,8 +77,9 @@
             </label>
         {% endif %}
     </h2>
+    </div>
     {% endif %}
-
+    <div align="center" id="controlsDiv">
     {% if match_status == 0 %}
         <button class="matchBtn" onclick="requestMatch({{ profile.id }})">Request Match</button>
     {% elif match_status == 1 %}

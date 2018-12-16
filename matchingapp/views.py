@@ -10,6 +10,7 @@ from bcrypt import hashpw
 from django.utils.crypto import get_random_string
 from django.core.mail import send_mail
 from django.views.decorators.csrf import csrf_exempt
+import re
 
 # Fixed salt for hashing passwords to make sure that the hashing is constant
 salt = b'$2b$12$Jx1Vfxjy0iuMxP0cBeDctu'
@@ -88,13 +89,29 @@ def signup(request):
         if request.is_ajax():
             try:
                 req_dets = dict(request.POST.lists())
+                today = date.today()
+                born = datetime.datetime.strptime(req_dets['profile[dob]'][0], "%Y-%m-%d").date()
+                age = today.year - born.year - ((today.month, today.day) < (born.month, born.day))
+                checkedHobbies = req_dets['profile[checkedHobbies][]']
+                if req_dets['username'][0] == "" or len(re.findall(r"^[a-zA-Z0-9_\-]+$", req_dets['username'][0])) == 0 \
+                        or len(req_dets['password'][0]) < 8 or len(re.findall(r"[a-z]+", req_dets['password'][0])) == 0 \
+                        or len(re.findall(r"[A-Z]+", req_dets['password'][0])) == 0 \
+                        or req_dets['username'][0] == req_dets['password'][0] \
+                        or len(re.findall(r"[0-9]+", req_dets['password'][0])) == 0 \
+                        or len(re.findall(r"[!@_]+", req_dets['password'][0])) == 0 \
+                        or req_dets['profile[name]'][0] == "" \
+                        or len(re.findall(r"[a-zA-Z ]+", req_dets['profile[name]'][0])) == 0 \
+                        or req_dets['profile[dob]'][0] == "" or age < 18 or req_dets['profile[gender]'][0] == "" \
+                        or req_dets['profile[email]'][0] == "" \
+                        or len(re.findall(r"^[a-zA-Z0-9_\-.]+@[a-zA-Z0-9_\-.]+\.[a-z]+$", req_dets['profile[email]'][0])) == 0 \
+                        or len(checkedHobbies) == 0:
+                    return HttpResponseBadRequest('Invalid form data')
                 mem = Member(username=req_dets['username'][0], password=hashpw(req_dets['password'][0].encode('utf-8'), salt).decode("utf-8"))
                 try:
                     mem.save()
                 except IntegrityError:
                     return HttpResponseBadRequest('Username already taken')
                 hobbies = []
-                checkedHobbies = req_dets['profile[checkedHobbies][]']
                 for hobby in checkedHobbies:
                     hobbies.append(Hobby.objects.get(name=hobby))
                 prof = Profile.objects.create(profile_image='profile_images/silhouette.png', name=req_dets['profile[name]'][0], email=req_dets['profile[email]'][0], dob=datetime.datetime.strptime(req_dets['profile[dob]'][0], "%Y-%m-%d").date(), gender=req_dets['profile[gender]'][0])
@@ -104,10 +121,6 @@ def signup(request):
                 mem.profile = prof
                 mem.save()
                 request.session['profile'] = {'id': prof.pk, 'profile_image': prof.profile_image.url, 'name': prof.name, 'email': prof.email, 'gender': prof.gender, 'dob': prof.dob.strftime('%-d %B %Y'), 'dobdate': str(prof.dob), 'hobbies': serializers.serialize('json', prof.hobbies.all())}
-                print(request.session['profile'])
-                print(mem.profile.hobbies.all())
-                for key, value in request.session.items():
-                    print('{} => {}'.format(key, value))
                 request.session['username'] = request.POST['username']
                 request.session['isAdmin'] = mem.isAdmin
                 return HttpResponse()
@@ -129,7 +142,6 @@ def signup(request):
 def profile(request, prof=None):
     try:
         pfl = Profile.objects.get(id=prof)
-        print(pfl)
         mem = Member.objects.get(profile=pfl)
         user = Member.objects.get(username=request.session['username'])
         if prof == user.profile.id:
@@ -141,7 +153,6 @@ def profile(request, prof=None):
         context['profile'] = {'id': pfl.pk, 'profile_image': pfl.profile_image.url, 'name': pfl.name,
                                       'email': pfl.email, 'gender': pfl.gender, 'dob': pfl.dob.strftime('%-d %B %Y'),
                                       'hobbies': list(pfl.hobbies.values_list('name', flat=True)), 'isAdmin': pfl.member.isAdmin}
-        print(context)
         match_status = 0
         if mem in user.match_requests.all():
             match_status = 1
@@ -161,7 +172,6 @@ def userProfile(request):
     context = getContext(request)
     hobby_set = Hobby.objects.values_list('name', flat=True)
     context['hobby_list'] = list(hobby_set)
-    print(context)
     return render(request, 'matchingapp/user_profile.html', context)
 
 

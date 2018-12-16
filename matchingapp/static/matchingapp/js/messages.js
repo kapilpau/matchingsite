@@ -41,7 +41,6 @@ function createChat() {
                 xhr.setRequestHeader("X-CSRFToken", csrftoken);
             },
             success: function (data) {
-                console.log(data);
                 window.location.pathname ='/messages/' + data.id;
             },
             data: {

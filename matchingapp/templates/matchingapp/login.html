@@ -46,16 +46,13 @@
                     csrfmiddlewaretoken: csrftoken
                 },
                 success: function (data) {
-                    console.log("Success");
                     window.location.replace('..')
                 },
                 failure: function (data) {
-                    console.log(data);
                     document.getElementById('username').style.borderColor = 'red';
                     document.getElementById('password').style.borderColor = 'red';
                 },
                 error: function(jqXHR, textStatus, error){
-                    console.log("Error");
                     document.getElementById('username').style.borderColor = 'red';
                     document.getElementById('password').style.borderColor = 'red';
                 }
