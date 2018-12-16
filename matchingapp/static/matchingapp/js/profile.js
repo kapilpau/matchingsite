@@ -37,7 +37,6 @@ function requestMatch(id) {
     is replaced with a request match button again
  */
 function cancelRequest(id) {
-    var csrftoken = Cookies.get('csrftoken');
     $.ajax({
         url: '/cancelRequest/',
         type: 'POST',
@@ -62,3 +61,39 @@ function cancelRequest(id) {
         }
     });
 }
+
+// Once the document is ready, an onclick listener is added the admin toggle switch to allow admins to toggle admin
+// status of other users
+$(document).ready( function () {
+        let id = window.location.pathname.split("/")[window.location.pathname.split("/").length -1];
+        if (id === "") {
+            id = window.location.pathname.split("/")[window.location.pathname.split("/").length -2];
+        }
+        $('#toggleAdmin').on('click', function () {
+                console.log("Toggled");
+                $.ajax({
+                url: '/toggleAdmin/',
+                type: 'POST',
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                },
+                data: {
+                    id: id
+                },
+                success: function(data) {
+                    console.log("Success");
+                    console.log(data);
+                },
+                failure: function(data) {
+                    console.log("Failure");
+                    console.log(data);
+                },
+                error: function(data) {
+                    console.log("Error");
+                    console.log(data);
+                }
+            });
+        });
+
+    }
+);

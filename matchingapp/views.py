@@ -140,7 +140,7 @@ def profile(request, prof=None):
         pfl = Profile.objects.get(id=prof)
         context['profile'] = {'id': pfl.pk, 'profile_image': pfl.profile_image.url, 'name': pfl.name,
                                       'email': pfl.email, 'gender': pfl.gender, 'dob': pfl.dob.strftime('%-d %B %Y'),
-                                      'hobbies': list(pfl.hobbies.values_list('name', flat=True))}
+                                      'hobbies': list(pfl.hobbies.values_list('name', flat=True)), 'isAdmin': pfl.member.isAdmin}
         print(context)
         match_status = 0
         if mem in user.match_requests.all():
@@ -279,7 +279,6 @@ def uploadNewProfileImage(request):
             filename = str(random.randint(10000, 100000000000)) + '_' + str(
                 random.randint(10000, 100000000000)) + '_' + str(
                 random.randint(10000, 100000000000)) + '.png'
-        print(filename)
         new_img.name = filename
         try:
             pfl = Member.objects.get(username=request.session['username']).profile
@@ -290,7 +289,6 @@ def uploadNewProfileImage(request):
         except:
             return HttpResponseServerError()
     else:
-        print(request.FILES)
         return HttpResponseBadRequest('Image file required')
 
 
@@ -299,7 +297,6 @@ def uploadNewProfileImage(request):
 def getUsers(request):
     if request.method == 'GET' and request.is_ajax():
         pfls = Profile.objects.exclude(member__username=request.session['username'])
-        print(pfls)
         resp = []
         for pfl in pfls:
             if (Member.objects.get(username=request.session['username']) not in Member.objects.get(profile=pfl).matches.all()) and (Member.objects.get(username=request.session['username']) not in Member.objects.get(profile=pfl).match_requests.all()):
@@ -343,7 +340,6 @@ def requestMatch(request):
 @loggedin
 def matches(request):
     context = getContext(request)
-    print(context)
     return render(request, 'matchingapp/matches.html', context)
 
 
@@ -403,7 +399,6 @@ def messages(request):
     for convo in convos:
         if user in convo.participants.all():
             readStatus = False
-            print(Message.objects.order_by('sent_at').filter(conversation=convo))
             try:
                 if user in Message.objects.order_by('sent_at').filter(conversation=convo).last().read_by.all():
                     readStatus = True
@@ -412,7 +407,6 @@ def messages(request):
             contextConvos.append({'id': convo.id, 'name': convo.name, 'read': readStatus})
     context = getContext(request)
     context['conversations'] = contextConvos
-    print(context)
     return render(request, 'matchingapp/messages.html', context)
 
 
@@ -465,7 +459,6 @@ def conversation(request, id):
     try:
         msgs = Message.objects.order_by('sent_at').filter(conversation=Conversation.objects.get(id=id))
         user = Member.objects.get(username=request.session['username'])
-        print(Conversation.objects.get(id=id).participants.all())
         if user not in Conversation.objects.get(id=id).participants.all():
             return redirect('/')
         contextMsgs = []
@@ -505,9 +498,9 @@ def static(request, appname, foldername, filename):
         try:
             file = open(file_name, 'rb')
         except:
-            print("Foo")
+            return HttpResponseServerError()
     else:
-        print("Doesn't exist bro")
+        return HttpResponseBadRequest()
     return FileResponse(file)
 
 
@@ -518,9 +511,9 @@ def media(request, foldername, filename):
         try:
             file = open(file_name, 'rb')
         except:
-            print("Foo")
+            return HttpResponseServerError()
     else:
-        print("Doesn't exist bro")
+        return HttpResponseBadRequest()
     return FileResponse(file)
 
 
@@ -531,12 +524,13 @@ def favicon(request):
         try:
             file = open(file_name, 'rb')
         except:
-            print("Foo")
+            return HttpResponseServerError()
     else:
-        print("Doesn't exist bro")
+        return HttpResponseBadRequest()
     return FileResponse(file)
 
 
+# The user requests to reset their password and has to provide their existing one and an acceptable new one
 def saveNewPassword(request):
     if hashpw(request.POST['oldPassword'].encode('utf-8'), salt).decode('utf-8') == Member.objects.get(username=request.session['username']).password:
         try:
@@ -548,3 +542,14 @@ def saveNewPassword(request):
         return HttpResponse()
     else:
         return HttpResponseBadRequest("Incorrect existing password")
+
+
+# API endpoint to allow admins to update the status of other admins without having to use the built in admin features
+def toggleAdmin(request):
+    mem = Member.objects.get(profile=Profile.objects.get(id=int(request.POST['id'])))
+    if mem.isAdmin:
+        mem.isAdmin = False
+    else:
+        mem.isAdmin = True
+    mem.save()
+    return HttpResponse()

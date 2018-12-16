@@ -31,5 +31,6 @@ urlpatterns = [
     path('static/<str:appname>/<str:foldername>/<str:filename>', views.static, name='static'),
     path('media/<str:foldername>/<str:filename>', views.media, name='media'),
     path('media/favicon.ico', views.favicon, name='favicon'),
-    path('saveNewPassword/', views.saveNewPassword, name='saveNewPassword')
+    path('saveNewPassword/', views.saveNewPassword, name='saveNewPassword'),
+    path('toggleAdmin/', views.toggleAdmin, name='toggleAdmin')
 ]

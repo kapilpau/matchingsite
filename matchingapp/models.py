@@ -74,8 +74,6 @@ class Message(models.Model):
     read_by = models.ManyToManyField(
         to=Member,
         related_name='ready_by',
-        blank=True,
-        null=True,
         symmetrical=False
     )
     sent_at = models.DateTimeField(default=datetime.now, blank=False, null=False)
