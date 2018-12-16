@@ -8,10 +8,14 @@ $(document).ready(function (e) {
         success: function (data) {
             $.each(JSON.parse(data), function (i, item) {
                 let html = "";
-                html += "<tr id='" + item.pk + "'>";
-                html += "<td id='" + item.pk + "-name'>"+item.fields.name+"</td>";
-                html += "<td id='" + item.pk + "-icons'><i class='material-icons' title='delete' onclick='doDelete("+item.pk+")'>clear</i></td>";
-                html += "</tr>";
+                html += "<div id='" + item.pk + "' align='center' style='margin: 0 auto'>";
+                html += "<div class='card' style='width: 15rem;'>";
+                html += "<div class='card-body'>";
+                html += "<div id='" + item.pk + "-name'>"+item.fields.name+"</div>";
+                html += "<div id='" + item.pk + "-icons'><i class='material-icons' title='delete' onclick='doDelete("+item.pk+")'>clear</i></div>";
+                html += "</div>";
+                html += "</div>";
+                html += "</div>";
                 $('#product-table').append(html);
             });
         },
