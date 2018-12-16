@@ -32,6 +32,9 @@
         <a id="profileBtn" href="/profile">Profile</a>&nbsp&nbsp&nbsp&nbsp
         <a id="matchesBtn" href="/matches">Matches</a>&nbsp&nbsp&nbsp&nbsp
         <a id="messagesBtn" href="/messages">Messages</a>&nbsp&nbsp&nbsp&nbsp
+        {% if isAdmin == True %}
+            <a id="adminButton" href="/administrator">Admin</a>&nbsp&nbsp&nbsp&nbsp
+        {% endif %}
         <a id="signOutBtn" href="/signout">Sign Out</a>
     {% endif %}
 	<br>
