@@ -96,8 +96,10 @@ function save() {
         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
         data: profile,
         success: function (data) {
+            dob = new Date(profile.dob);
+            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
             document.getElementById('name').outerHTML = "<span id='name'>"+profile.name+"</span>";
-            document.getElementById('dob').outerHTML = "<span id='dob'>"+ profile.dob +"</span>";
+            document.getElementById('dob').outerHTML = "<span id='dob'>"+ dob.getDate() + " " + monthNames[dob.getMonth()] + " " + dob.getFullYear() +"</span>";
             document.getElementById('email').outerHTML = "<span id='email'>"+ profile.email +"</span>";
             document.getElementById('gender').outerHTML = "<span id='gender'>"+ profile.gender +"</span>";
         },

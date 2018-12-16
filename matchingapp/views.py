@@ -101,7 +101,8 @@ def signup(request):
                         or len(re.findall(r"[!@_]+", req_dets['password'][0])) == 0 \
                         or req_dets['profile[name]'][0] == "" \
                         or len(re.findall(r"[a-zA-Z ]+", req_dets['profile[name]'][0])) == 0 \
-                        or req_dets['profile[dob]'][0] == "" or age < 18 or req_dets['profile[gender]'][0] == "" \
+                        or req_dets['profile[dob]'][0] == "" or age < 18 or age > 99 \
+                        or req_dets['profile[gender]'][0] == "" \
                         or req_dets['profile[email]'][0] == "" \
                         or len(re.findall(r"^[a-zA-Z0-9_\-.]+@[a-zA-Z0-9_\-.]+\.[a-z]+$", req_dets['profile[email]'][0])) == 0 \
                         or len(checkedHobbies) == 0:
@@ -254,21 +255,27 @@ def getContext(request):
 @loggedin
 def updateProfile(request):
     request_dets = QueryDict(request.body)
+    print(request_dets)
     mem = Member.objects.get(username=request.session['username'])
     pfl = mem.profile
     hobbies = []
+    today = date.today()
+    born = datetime.datetime.strptime(request_dets['dob'], "%Y-%m-%d").date()
+    age = today.year - born.year - ((today.month, today.day) < (born.month, born.day))
     checkedHobbies = request_dets.getlist('checkedHobbies[]')
+    if request_dets['name'] == "" or len(re.findall(r"[a-zA-Z ]+", request_dets['name'])) == 0 \
+            or request_dets['dob'] == "" or age < 18 or age > 99 or request_dets['gender'] == "" \
+            or request_dets['email'] == "" or len(checkedHobbies) == 0 \
+            or len(re.findall(r"^[a-zA-Z0-9_\-.]+@[a-zA-Z0-9_\-.]+\.[a-z]+$", request_dets['email'])) == 0:
+        return HttpResponseBadRequest('Invalid form data')
+    print(checkedHobbies)
     for hobby in checkedHobbies:
+        print(hobby)
         hobbies.append(Hobby.objects.get(name=hobby))
-    if pfl is None:
-        pfl = Profile.objects.create(profile_image='profile_images/silhouette.png', name=request_dets['name'], email=request_dets['email'], dob=datetime.datetime.strptime(request_dets['dob'], "%Y-%m-%d").date(), gender=request_dets['gender'])
-        mem.profile = pfl
-        mem.save()
-    else:
-        pfl.name = request_dets['name']
-        pfl.email = request_dets['email']
-        pfl.dob = datetime.datetime.strptime(request_dets['dob'], "%Y-%m-%d").date()
-        pfl.gender = request_dets['gender']
+    pfl.name = request_dets['name']
+    pfl.email = request_dets['email']
+    pfl.dob = datetime.datetime.strptime(request_dets['dob'], "%Y-%m-%d").date()
+    pfl.gender = request_dets['gender']
     pfl.hobbies.set(hobbies)
     pfl.save()
     request.session['profile'] = {'id': pfl.pk, 'profile_image': pfl.profile_image.url, 'name': pfl.name, 'email': pfl.email, 'gender': pfl.gender, 'dob': pfl.dob.strftime('%-d %B %Y'), 'dobdate': str(pfl.dob), 'hobbies': serializers.serialize('json', pfl.hobbies.all())}
