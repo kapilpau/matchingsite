@@ -72,8 +72,8 @@
 
 {% block content %}
     <div align="center" id="controlsDiv">
-    <h2>Toggle {{ profile.name }}'s admin status</h2>
     {% if isAdmin == True %}
+    <h2>Toggle {{ profile.name }}'s admin status
         {% if profile.isAdmin == True %}
             <label class="switch">
               <input id="toggleAdmin" type="checkbox" checked>
@@ -85,7 +85,9 @@
               <span class="slider"></span>
             </label>
         {% endif %}
+    </h2>
     {% endif %}
+
     {% if match_status == 0 %}
         <button class="matchBtn" onclick="requestMatch({{ profile.id }})">Request Match</button>
     {% elif match_status == 1 %}
